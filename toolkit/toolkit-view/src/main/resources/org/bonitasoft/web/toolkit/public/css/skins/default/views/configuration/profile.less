@@ -87,14 +87,18 @@
 										}
 									}
 								}
-								&:hover > .td_actions a.deleteProfileEntryLink {
-									visibility: visible;
+								&:hover{
+									 > .td_actions a.deleteProfileEntryLink {
+										visibility: visible;
+									}
+									cursor: n-resize;
 								}
 							}
 							.tr_1 { // menu
 								color: @header-menu-link-textColor;
+								cursor: e-resize !important;
 								text-align: @profileMoreDetails-menuEditor-folder-textAlign;
-								background: transparent;
+								.verticalGradient (@header-menu-gradientColor1 , @header-menu-gradientPosition1 , @header-menu-gradientColor2 , @header-menu-gradientPosition2);
 								.height(@header-menu-height);
 								> .td {
 									border: none;
@@ -117,6 +121,7 @@
 				p.addProfileEntry {
 					clear: both;
 					padding: @profileMoreDetails-linkEditor-padding;
+					background: @body-background;
 					color: @header-menu-link-textColorHover;
 					.boxShadow (@dropdown-shadowX , @dropdown-shadowY , @dropdown-shadowBlur , @dropdown-shadowColor);
 					border: @profileMoreDetails-linkEditor-border;

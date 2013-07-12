@@ -19,25 +19,38 @@ $(function() {
 		if (context.is(".datatable")){
 			// hack for datatable where there is not a label after the checkbox
 			// or radio
-			if(context.is(".datatable")){
-				$("input[type=checkbox],input[type=radio]", context).each(function(i){
-					if($("label", $(this).parent()).length>0){
-						return;
+			$("input[type=checkbox],input[type=radio]", context).each(function(i){
+				if($("label", $(this).parent()).length>0){
+					return;
+				}
+				var inputId = this.id;
+				var forValue = "";
+				if(inputId!= ""){
+					forvalue = inputId;
+				}
+				$(this).parent().append('<label for="'+forvalue+'">&nbsp;</label>');
+				$('label', $(this).parent()).click(function(e){
+					var cb = $('input[type=checkbox],input[type=radio]', $(this).parent());
+					cb.checkToggle();
+					cb.trigger('click')
+					return false;
+				})
+			});
+			
+			tablePanel = context.parent(".tablePannel");
+			if(tablePanel.length == 1){
+				$(".datatable  .table .tbody",tablePanel).sortable(
+					{
+						items: "div.tr:not(.tr_1)",
+						cursor: "n-resize"
 					}
-					var inputId = this.id;
-					var forValue = "";
-					if(inputId!= ""){
-						forvalue = inputId;
-					}
-					$(this).parent().append('<label for="'+forvalue+'">&nbsp;</label>');
-					$('label', $(this).parent()).click(function(e){
-						var cb = $('input[type=checkbox],input[type=radio]', $(this).parent());
-						cb.checkToggle();
-						cb.trigger('click')
-						return false;
-					})
-				});
+				).disableSelection();
+				tablePanel.parent().sortable({
+					cursor: "e-resize"
+				}).disableSelection();
 			}
+			
+			
 			$('input', context).customInput();
 			$(".formentry.select .input", context).each(function(i,e){
 				resizeSelect(e);
