@@ -31,15 +31,15 @@ public class ButtonAction extends Button {
     public ButtonAction(String label, String tooltip, Action action) {
         super(label, tooltip, action);
     }
-    
+
     public ButtonAction(String id, String label, String tooltip, Action action) {
         super(id, label, tooltip, action);
     }
-    
+
     public ButtonAction(String id, final String label, final String tooltip, final TypedString link) {
         super(id, label, tooltip, link);
     }
-    
+
     @Override
     protected void postProcessHtml() {
         super.postProcessHtml();
