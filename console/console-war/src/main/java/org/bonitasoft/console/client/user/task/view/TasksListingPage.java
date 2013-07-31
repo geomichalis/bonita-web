@@ -21,6 +21,7 @@ import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
 import java.util.LinkedList;
 
 import org.bonitasoft.console.client.common.formatter.OverdueDateCellFormatter;
+import org.bonitasoft.console.client.common.formatter.TaskUserCellFormatter;
 import org.bonitasoft.console.client.user.task.action.TaskClaimAction;
 import org.bonitasoft.console.client.user.task.action.TaskRelaseAction;
 import org.bonitasoft.console.client.user.task.action.UserTasksHideAction;
@@ -141,9 +142,11 @@ public class TasksListingPage extends ItemListingPage<HumanTaskItem> implements 
         return new ItemTable(Definitions.get(HumanTaskDefinition.TOKEN))
                 .addColumn(HumanTaskItem.ATTRIBUTE_PRIORITY, _("Priority"), true)
                 .addColumn(HumanTaskItem.ATTRIBUTE_DISPLAY_NAME, _("Name"), true)
+                .addColumn(HumanTaskItem.ATTRIBUTE_ASSIGNED_USER_ID, "", false)
                 .addColumn(HumanTaskItem.ATTRIBUTE_DUE_DATE, _("Due date"), true, true)
                 .addColumn(new DeployedAttributeReader(HumanTaskItem.ATTRIBUTE_PROCESS_ID, ProcessItem.ATTRIBUTE_DISPLAY_NAME), _("App"))
                 .addCellFormatter(HumanTaskItem.ATTRIBUTE_DUE_DATE, new OverdueDateCellFormatter())
+                .addCellFormatter(HumanTaskItem.ATTRIBUTE_ASSIGNED_USER_ID, new TaskUserCellFormatter())
                 .setOrder(HumanTaskItem.ATTRIBUTE_DUE_DATE, false)
                 .setOrder(HumanTaskItem.ATTRIBUTE_PRIORITY, false);
     }

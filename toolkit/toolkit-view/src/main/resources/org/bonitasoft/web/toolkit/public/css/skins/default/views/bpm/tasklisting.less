@@ -89,6 +89,17 @@
 						overflow: hidden;
 						width: @taskList-task-width;
 					}
+                    &.td_assigned_id{
+                        .hideText();
+                        min-height: @taskList-users-min-height;
+                        width: @taskList-users-width;
+                        &.myTask{
+                            .bg(@taskList-users-take, no-repeat, transparent, @taskList-priority-bgX, center);
+                        }
+                        &.unassign{
+                            .bg(@taskList-users-default, no-repeat, transparent, @taskList-priority-bgX, center);
+                        }
+                    }
 				}
 			}
 		}
