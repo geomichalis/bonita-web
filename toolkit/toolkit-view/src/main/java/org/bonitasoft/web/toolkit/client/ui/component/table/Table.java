@@ -887,24 +887,34 @@ public class Table extends AbstractTable implements Refreshable {
 
     public String getSearch() {
 
-        final String search = $(".tablefilters input[name=search]:not(.empty)", getElement()).val();
+        GQuery gQuery = $(".tablefilters input[name=search]", getElement());
 
-        if ("null".equalsIgnoreCase(search)) {
+        if (gQuery.attr("class").contains("empty")) {
             return "";
         }
+        // if ("null".equalsIgnoreCase(search)) {
+        // return "";
+        // }
 
-        return search;
+        return gQuery.val();
     }
 
     public Table setSearch(final String query) {
         this.defaultSearch = query;
 
         if (isGenerated()) {
-            $(".tablefilters input[name=search]:not(.empty)", getElement()).val(this.defaultSearch);
+            // $(".tablefilters input[name=search]:not(.empty)", getElement()).val(this.defaultSearch);
+            setSearch(getElement(), this.defaultSearch);
         }
 
         return this;
     }
+
+    private native void setSearch(Element e, String defaultSearch)
+    /*-{
+     $wnd.$(".tablefilters input[name=search]", e).not(".empty").val(defaultSearch);
+    
+     }-*/;
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ORDER
