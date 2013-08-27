@@ -78,7 +78,7 @@ $(function() {
 				+ '"></a></div>')
 
 		var pluploader = new plupload.Uploader({
-			runtimes : 'gears,html5,flash,silverlight,browserplus',
+			runtimes : 'gears,html4,html5,flash,silverlight,browserplus',
 			multipart : true,
 			container : 'uploader',
 			browse_button : input.attr("name"),
