@@ -201,6 +201,9 @@
 	.noIEGradient();
 	background: url("../css/skins/@{skinpath}/images/@{img}") @bgcolor @repeat  @x @y !important;
 }
+.bg(@img, @options){
+	background: url("../css/skins/@{skinpath}/images/@{img}") @options !important;
+}
 
 .bgLeft(@img){
 	.bg(@img,no-repeat,transparent, left,center);
