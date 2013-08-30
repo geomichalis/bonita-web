@@ -506,21 +506,29 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     private void addChangeEventHandler(GQuery checkboxes) {
-        checkboxes.change(new Function() {
+        checkboxes.each(new Function() {
 
             @Override
-            public void f(final Element e) {
-                processEvent($(e));
+            public void f(final Element k) {
+                $(k).change(new Function() {
+
+                    @Override
+                    public void f(final Element e) {
+                        processEvent($(e));
+                    }
+
+                });
+
+                $(k).click(new Function() {
+
+                    @Override
+                    public boolean f(final Event e) {
+                        processEvent($(e.getEventTarget()));
+                        return false;
+                    }
+                });
+
             }
-
-        }).click(new Function() {
-
-            @Override
-            public boolean f(final Event e) {
-                processEvent($(e.getEventTarget()));
-                return false;
-            }
-
         });
     }
 
@@ -556,17 +564,18 @@ public class Table extends AbstractTable implements Refreshable {
         }
 
         // Check all if no checkbox unchecked
-        final boolean noCheckboxCheched = $(".td_checkboxes input:not(:checked)", Table.this.getElement()).length() == 0;
+        final boolean noCheckboxCheched = $(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() == $(".td_checkboxes input",
+                Table.this.getElement()).length();
         if (noCheckboxCheched) {
-            setCheckboxesValue($(".th_checkboxes :checkbox", Table.this.getElement()), true, true);
+            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), true, true);
             $(".th_checkboxes label", Table.this.getElement()).addClass("checked");
         } else {
-            setCheckboxesValue($(".th_checkboxes :checkbox", Table.this.getElement()), false, true);
+            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), false, true);
             $(".th_checkboxes label", Table.this.getElement()).removeClass("checked");
         }
 
         // Set datatable class to to inform about selected or not
-        if ($(".td_checkboxes :checked", Table.this.getElement()).length() > 0) {
+        if ($(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() > 0) {
             $(this.getElement()).addClass("linechecked");
             enableActionsLinks();
         } else {
