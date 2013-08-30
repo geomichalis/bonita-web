@@ -37,7 +37,9 @@
 	background: -webkit-linear-gradient(top,  @c1 @p1,@c2 @p2); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top,  @c1 @p1, @c2 @p2); /* Opera 11.10+ */
 	background: linear-gradient(to bottom,  @c1 @p1, @c2 @p2); /* W3C */
-	filter: ~"progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=@{c1}, endColorstr=@{c2})"; /* also meant to be IE... */
+	-pie-background: linear-gradient(@c1 @p1,#ff00ff @p2) @c2;
+	.CSSPIE();
+//	filter: ~"progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=@{c1}, endColorstr=@{c2})"; /* also meant to be IE... */
 }
 .horizontalGradient(@c1, @p1, @c2, @p2) {
 	background-color: @c1; /* Old browsers */
