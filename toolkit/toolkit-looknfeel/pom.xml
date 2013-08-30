@@ -12,7 +12,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<wro4j.version>1.6.3</wro4j.version>
+		<wro4j.version>1.7.0</wro4j.version>
 		<output.directory>${project.build.directory}/${project.build.finalName}</output.directory>
 		<wro.config>${basedir}/src/main/resources/wro</wro.config>
 		<assembly.config>${basedir}/src/main/resources</assembly.config>
@@ -35,7 +35,7 @@
 			<plugin>
 				<groupId>ro.isdc.wro4j</groupId>
 				<artifactId>wro4j-maven-plugin</artifactId>
-				<version>1.6.3</version>
+				<version>${wro4j.version}</version>
 				<configuration>
 					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 					<extraConfigFile>${wro.config}/wro.properties</extraConfigFile>
