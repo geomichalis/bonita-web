@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>platform-parent</artifactId>
 		<groupId>org.bonitasoft.platform</groupId>
@@ -41,4 +42,23 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<!-- default CSS -->
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<bonita.css>css/bonita.css</bonita.css>
+			</properties>
+		</profile>
+		<!-- WRO CSS MANAGEMENT -->
+		<profile>
+			<id>css</id>
+			<properties>
+				<bonita.css>http://127.0.0.1:8081/wro/bonita.css</bonita.css>
+			</properties>
+		</profile>
+	</profiles>
 </project>

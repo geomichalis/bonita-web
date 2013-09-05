@@ -89,7 +89,7 @@
 <link rel="icon" type="image/png" href="images/favicon2.ico" />
 <!-- Load LESS CSS -->
 <script type="text/javascript" src="portal/scripts/includes/array.prototype.js"></script>
-<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8081/wro/bonita.css"/>
+<link rel="stylesheet" type="text/css" href="${bonita.css}"/>
 
 
 <script type="text/javascript" src="portal/scripts/jquery/jquery-1.6.4.js"></script>

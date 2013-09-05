@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>console-parent</artifactId>
 		<groupId>org.bonitasoft.console</groupId>
@@ -12,7 +13,7 @@
 	<properties>
 		<permutations>All</permutations>
 		<enable.engine.http.api.start>&lt;!--</enable.engine.http.api.start>
-        <enable.engine.http.api.end>--&gt;</enable.engine.http.api.end>
+		<enable.engine.http.api.end>--&gt;</enable.engine.http.api.end>
 	</properties>
 
 	<dependencies>
@@ -124,8 +125,11 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<mkdir dir="${project.build.directory}/${project.artifactId}-${project.version}" />
-								<echo file="${project.build.directory}/${project.artifactId}-${project.version}/VERSION" append="false">version : ${project.version}</echo>
+								<mkdir
+									dir="${project.build.directory}/${project.artifactId}-${project.version}" />
+								<echo
+									file="${project.build.directory}/${project.artifactId}-${project.version}/VERSION"
+									append="false">version : ${project.version}</echo>
 							</tasks>
 						</configuration>
 					</execution>
@@ -137,10 +141,18 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html" file="${project.build.directory}/forms-design/html/page.html" />
-								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html" file="${project.build.directory}/forms-design/html/process.html" />
-								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html" file="${project.build.directory}/forms-design/html/error.html" />
-								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html" file="${project.build.directory}/forms-design/html/confirm.html" />
+								<copy
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html"
+									file="${project.build.directory}/forms-design/html/page.html" />
+								<copy
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html"
+									file="${project.build.directory}/forms-design/html/process.html" />
+								<copy
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html"
+									file="${project.build.directory}/forms-design/html/error.html" />
+								<copy
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html"
+									file="${project.build.directory}/forms-design/html/confirm.html" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -328,13 +340,35 @@
 					<version>1.3.170</version>
 				</dependency>
 			</dependencies>
-			
+
 			<properties>
-                 <bonita.home>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home>
-            </properties>
+				<bonita.home>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home>
+				<bonita.home.ref>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home.ref>
+				<bonita.css>portal/css/bonita.css</bonita.css>
+			</properties>
 			<build>
 				<plugins>
 					<!-- configure the GWT-Maven plugin -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>use-good-css</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<copy
+											todir="${bonita.home}/client/platform/tenant-template/work/looknfeel/default/"
+											file="${bonita.home.ref}/client/platform/tenant-template/work/looknfeel/default/BonitaConsole.html" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>gwt-maven-plugin</artifactId>
@@ -357,29 +391,67 @@
 							<deploy>${project.build.directory}</deploy>
 						</configuration>
 					</plugin>
-					
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>replace-css-url-in-jsp</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<inherited>false</inherited>
+								<configuration>
+									<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+									<appendAssemblyId>false</appendAssemblyId>
+									<descriptors>
+										<descriptor>assembly.xml</descriptor>
+									</descriptors>
+									<tarLongFileMode>gnu</tarLongFileMode>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<!-- add extra projects sources -->
 					<plugin>
-				         <groupId>org.codehaus.mojo</groupId>
-				         <artifactId>build-helper-maven-plugin</artifactId>
-				         <executions>
-				           <execution>
-				             <id>add-source</id>
-				             <phase>generate-sources</phase>
-				             <goals>
-				               <goal>add-source</goal>
-				             </goals>
-				             <configuration>
-				               <sources>
-				                 <source>../../toolkit/toolkit-view/src/main/java</source>
-				                 <source>../../toolkit/toolkit-view/src/main/resources</source>
-				               </sources>
-				             </configuration>
-				           </execution>
-				         </executions>
-				      </plugin> 
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>add-source</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>../../toolkit/toolkit-view/src/main/java</source>
+										<source>../../toolkit/toolkit-view/src/main/resources</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<!-- default CSS -->
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<bonita.css>css/bonita.css</bonita.css>
+			</properties>
+		</profile>
+		<!-- WRO CSS MANAGEMENT -->
+		<profile>
+			<id>css</id>
+			<properties>
+				<bonita.css>http://127.0.0.1:8081/bonita.css</bonita.css>
+			</properties>
 		</profile>
 	</profiles>
 </project>
