@@ -364,7 +364,7 @@
 			<properties>
 				<bonita.home>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home>
 				<bonita.home.ref>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home.ref>
-				<bonita.css>portal/css/bonita.css</bonita.css>
+				<bonita.css>css/bonita.css</bonita.css>
 			</properties>
 			<build>
 				<plugins>
