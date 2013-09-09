@@ -57,7 +57,7 @@
 		<profile>
 			<id>css</id>
 			<properties>
-				<bonita.css>http://127.0.0.1:8081/wro/bonita.css</bonita.css>
+				<bonita.css>http://127.0.0.1:8081/bonita.css</bonita.css>
 			</properties>
 		</profile>
 	</profiles>

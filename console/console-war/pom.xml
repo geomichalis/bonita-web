@@ -141,18 +141,16 @@
 						</goals>
 						<configuration>
 							<tasks>
+								<copy file="${project.build.directory}/forms-design/html/page.html"
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html" />
 								<copy
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html"
-									file="${project.build.directory}/forms-design/html/page.html" />
+									file="${project.build.directory}/forms-design/html/process.html"
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html" />
+								<copy file="${project.build.directory}/forms-design/html/error.html"
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html" />
 								<copy
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html"
-									file="${project.build.directory}/forms-design/html/process.html" />
-								<copy
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html"
-									file="${project.build.directory}/forms-design/html/error.html" />
-								<copy
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html"
-									file="${project.build.directory}/forms-design/html/confirm.html" />
+									file="${project.build.directory}/forms-design/html/confirm.html"
+									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -238,6 +236,28 @@
 									<outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/portal</outputDirectory>
 								</artifactItem>
 							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>replace-css-url-in-jsp</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>assembly.xml</descriptor>
+							</descriptors>
+							<tarLongFileMode>gnu</tarLongFileMode>
 						</configuration>
 					</execution>
 				</executions>
@@ -362,8 +382,8 @@
 								<configuration>
 									<target>
 										<copy
-											todir="${bonita.home}/client/platform/tenant-template/work/looknfeel/default/"
-											file="${bonita.home.ref}/client/platform/tenant-template/work/looknfeel/default/BonitaConsole.html" />
+											file="${bonita.home.ref}/client/platform/tenant-template/work/looknfeel/default/BonitaConsole.html"
+											todir="${bonita.home}/client/platform/tenant-template/work/looknfeel/default/" />
 									</target>
 								</configuration>
 							</execution>
@@ -377,7 +397,6 @@
 							<draftCompile>true</draftCompile>
 							<enableAssertions>true</enableAssertions>
 							<extraParam>-deploy=${project.build.directory}</extraParam>
-
 							<module>org.bonitasoft.console.LightBonitaConsole</module>
 							<!-- configuration for gwt:run and gwt:debug -->
 							<systemProperties>
@@ -390,28 +409,6 @@
 							<runTarget>login.jsp?redirectUrl=portal%2Fhomepage%3Fgwt.codesvr%3D127.0.0.1%3A9997</runTarget>
 							<deploy>${project.build.directory}</deploy>
 						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>replace-css-url-in-jsp</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<inherited>false</inherited>
-								<configuration>
-									<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-									<appendAssemblyId>false</appendAssemblyId>
-									<descriptors>
-										<descriptor>assembly.xml</descriptor>
-									</descriptors>
-									<tarLongFileMode>gnu</tarLongFileMode>
-								</configuration>
-							</execution>
-						</executions>
 					</plugin>
 					<!-- add extra projects sources -->
 					<plugin>
@@ -433,6 +430,7 @@
 							</execution>
 						</executions>
 					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
