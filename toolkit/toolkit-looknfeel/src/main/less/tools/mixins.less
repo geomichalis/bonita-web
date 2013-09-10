@@ -129,6 +129,7 @@
 	-moz-box-shadow: @x @y @blur @color;
 	-o-box-shadow: @x @y @blur @color;
 	box-shadow: @x @y @blur @color;
+	.CSSPIE();
 }
 
 .noBoxShadow() {
@@ -199,7 +200,6 @@
 }
 
 .bg(@img, @repeat: no-repeat, @bgcolor: transparent, @x:center, @y: center){
-	.noIEGradient();
 	background: url("../css/skins/@{skinpath}/images/@{img}") @bgcolor @repeat  @x @y !important;
 }
 .bg(@img, @options){

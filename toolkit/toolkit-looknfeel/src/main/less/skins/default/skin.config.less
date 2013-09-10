@@ -16,7 +16,7 @@
 @calcFontSize: (@skinFontSize / @browserFontSize);
 
 @fontSize: ~"@{calcFontSize}em";
-@skinFont: "Signika-Regular";
+@skinFont: "Signika-Regular", sans-serif;
 @skinFontPath: "css/skins/default/fonts/";
 @fontColor: #6e6f6b;
 @borderColor: #c2c2c2;
@@ -287,7 +287,7 @@
 @tablesPanel-table-line-gradientPosition1: 0%;
 @tablesPanel-table-line-gradientColor2: #f5f5f5;
 @tablesPanel-table-line-gradientPosition2: 100%;
-@tablesPanel-table-line-shadowX: 0;
+@tablesPanel-table-line-shadowX: 0px;
 @tablesPanel-table-line-shadowY: 1px;
 @tablesPanel-table-line-shadowBlur: 2px;
 @tablesPanel-table-line-shadowColor: #c2c2c2;//rgba(0, 0, 0, 11%);
@@ -817,7 +817,7 @@
 @dropdown-shadowX: 2px;
 @dropdown-shadowY: 2px;
 @dropdown-shadowBlur: 2px;
-@dropdown-shadowColor: rgba(0, 0, 0, 0.2);
+@dropdown-shadowColor: #dfdede;
 
 
 // ----------------------------------------------------------------------------
@@ -829,7 +829,7 @@
 @loginPage-formContainer-shadowX: 0;
 @loginPage-formContainer-shadowY: 0;
 @loginPage-formContainer-shadowBlur: 10px;
-@loginPage-formContainer-shadowColor: rgba(0, 0, 0, 0.2);
+@loginPage-formContainer-shadowColor: #dfdede;
 
 @loginPage-formContainer-radius: @defaultRadius;
 @loginPage-formContainer-border: @border-width solid #bab9b9;
@@ -867,8 +867,6 @@
 @loginPage-form-input-radius: @defaultRadius;
 @loginPage-form-input-innerShadowX: 0;
 @loginPage-form-input-innerShadowY: 0;
-@loginPage-form-input-innerShadowBlur: 4px;
-@loginPage-form-input-innerShadowColor: rgba(0,0,0, 0.3);
 
 @loginPage-form-input-password-bg: "login-input-password.png";
 @loginPage-form-input-username-bg: "login-input-username.png";
@@ -1011,7 +1009,7 @@
 @popup-shadowX: 0;
 @popup-shadowY: 0;
 @popup-shadowBlur: 6*@w;
-@popup-shadowColor: rgba(0,0,0,0.75);
+@popup-shadowColor: #727272;
 @popup-closeButton-bgImg:"popup-close.png";
 @popup-closeButton-width: 50px;
 @popup-closeButton-height: 50px;

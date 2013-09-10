@@ -48,7 +48,6 @@
 			width: @loginPage-logo-width;
 			height: @loginPage-logo-height;
 			.bgLeft(@loginPage-logo-bg);
-			
 			float: left;
 		}
 		
@@ -70,19 +69,20 @@
 			float: left;
 			.formentry{
 				.label{
+					position:relative;
 					label{
 						.hideText();
 						color: @loginPage-form-label-color;
 					}
 				}
 				.input{
+					position:relative;
 					input[type=text],input[type=password]{
 						border: @loginPage-form-input-border;
 						width: 100%;
 						padding: @loginPage-form-input-padding;
 						.borderRadius(@loginPage-form-input-radius);
 						position: relative;
-						//.boxShadowInner(@loginPage-form-input-innerShadowX, @loginPage-form-input-innerShadowY, @loginPage-form-input-innerShadowBlur, @loginPage-form-input-innerShadowColor);
 					}
 					#password{
 						.bgRight(@loginPage-form-input-password-bg);
