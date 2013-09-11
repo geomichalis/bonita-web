@@ -70,8 +70,9 @@
 			.formentry{
 				.label{
 					position:relative;
+					.hideText();
+					
 					label{
-						.hideText();
 						color: @loginPage-form-label-color;
 					}
 				}
@@ -85,10 +86,10 @@
 						position: relative;
 					}
 					#password{
-						.bgRight(@loginPage-form-input-password-bg);
+						.bg(@loginPage-form-input-password-bg, ~"right center #fff no-repeat");
 					}
 					#username{
-						.bgRight(@loginPage-form-input-username-bg);
+						.bg(@loginPage-form-input-username-bg, ~"right center #fff no-repeat");
 					}
 				}
 				padding: @loginPage-form-formentry-padding;
