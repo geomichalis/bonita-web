@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bonitasoft.console.client.admin.bpm.task.view.formatter.PriorityCssCellFormatter;
-import org.bonitasoft.console.client.admin.profile.view.ListProfilePage;
+import org.bonitasoft.console.client.admin.profile.view.ProfileListingPage;
 import org.bonitasoft.console.client.common.formatter.OverdueDateCellFormatter;
 import org.bonitasoft.console.client.user.task.action.TaskRelaseAction;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseItem;

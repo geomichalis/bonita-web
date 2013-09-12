@@ -896,16 +896,18 @@ public class Table extends AbstractTable implements Refreshable {
 
     public String getSearch() {
 
-        GQuery gQuery = $(".tablefilters input[name=search]", getElement());
+        // GQuery gQuery = $(".tablefilters .tablefiltertext input", getElement());
 
-        if (gQuery.attr("class").contains("empty")) {
+        if (getElement().getClassName().contains("empty")) {// if the table is empty return ""
             return "";
         }
-        // if ("null".equalsIgnoreCase(search)) {
+        if (!$(getElement()).isVisible()) {
+            return "";
+        }
+        return _getSearch(getElement());
         // return "";
-        // }
 
-        return gQuery.val();
+        // return gQuery.val();
     }
 
     public Table setSearch(final String query) {
@@ -922,6 +924,12 @@ public class Table extends AbstractTable implements Refreshable {
     private native void setSearch(Element e, String defaultSearch)
     /*-{
      $wnd.$(".tablefilters input[name=search]", e).not(".empty").val(defaultSearch);
+    
+     }-*/;
+
+    private native String _getSearch(Element e)
+    /*-{
+      return $wnd.$(".tablefilters .tablefiltertext input", e).val();
     
      }-*/;
 

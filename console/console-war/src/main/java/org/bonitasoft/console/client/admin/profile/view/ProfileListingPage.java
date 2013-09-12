@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bonitasoft.console.client.admin.organization.group.GroupListingAdminPage;
 import org.bonitasoft.web.rest.model.portal.profile.ProfileDefinition;
 import org.bonitasoft.web.rest.model.portal.profile.ProfileItem;
 import org.bonitasoft.web.toolkit.client.data.item.Definitions;
@@ -37,16 +36,15 @@ import org.bonitasoft.web.toolkit.client.ui.page.itemListingPage.ItemListingTabl
  * @author Zhiheng Yang
  * @author Bastien ROHART
  */
-public class ListProfilePage extends ItemListingPage<ProfileItem> {
+public class ProfileListingPage extends ItemListingPage<ProfileItem> {
 
     public static final String TOKEN = "profilelisting";
-    
-    public static final List<String> PRIVILEGES = new ArrayList<String>();
-    
-    static {
-        PRIVILEGES.add(ListProfilePage.TOKEN);
-    }
 
+    public static final List<String> PRIVILEGES = new ArrayList<String>();
+
+    static {
+        PRIVILEGES.add(ProfileListingPage.TOKEN);
+    }
 
     protected static final String TABLE_ALL_PROFILES = "allusers";
 

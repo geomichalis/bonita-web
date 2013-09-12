@@ -21,7 +21,7 @@ import org.bonitasoft.console.client.SHA1;
 import org.bonitasoft.console.client.admin.organization.OrganizationImportAndExportPage;
 import org.bonitasoft.console.client.admin.organization.role.RoleListingPage;
 import org.bonitasoft.console.client.admin.organization.users.view.UserListingAdminPage;
-import org.bonitasoft.console.client.admin.profile.view.ListProfilePage;
+import org.bonitasoft.console.client.admin.profile.view.ProfileListingPage;
 import org.bonitasoft.console.client.menu.view.technicaluser.OrganizationMenuItem;
 import org.bonitasoft.console.client.menu.view.technicaluser.PortalMenuItem;
 import org.bonitasoft.web.toolkit.client.ClientApplicationURL;
