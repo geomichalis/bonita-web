@@ -200,8 +200,11 @@
 	white-space: nowrap;
 }
 
+.bg(@img, @repeat: no-repeat, @bgcolor: transparent, @x:center, @y: center, @important: "!important"){
+	background: url("css/skins/@{skinpath}/images/@{img}") @bgcolor @repeat  @x @y ~"@{important}";
+}
 .bg(@img, @repeat: no-repeat, @bgcolor: transparent, @x:center, @y: center){
-	background: url("../css/skins/@{skinpath}/images/@{img}") @bgcolor @repeat  @x @y !important;
+	.bg(@img, @repeat, @bgcolor, @x, @y, "!important");
 }
 .bg(@img, @options){
 	background: url("../css/skins/@{skinpath}/images/@{img}") @options !important;
