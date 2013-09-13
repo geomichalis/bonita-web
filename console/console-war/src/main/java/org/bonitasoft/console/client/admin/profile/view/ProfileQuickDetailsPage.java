@@ -129,7 +129,7 @@ public class ProfileQuickDetailsPage extends AbstractProfileDetailsPage {
         @Override
         protected void setData(final String json, final Map<String, String> headers) {
             final ApiSearchResultPager resultPager = ApiSearchResultPager.parse(headers);
-            this.target.setText(String.valueOf(resultPager.getNbTotalResults()));
+            this.target.getElement().setInnerText(String.valueOf(resultPager.getNbTotalResults()));
         }
     }
 
@@ -156,7 +156,7 @@ public class ProfileQuickDetailsPage extends AbstractProfileDetailsPage {
         @Override
         protected void setData(final String json, final Map<String, String> headers) {
             final ApiSearchResultPager resultPager = ApiSearchResultPager.parse(headers);
-            this.target.setText(String.valueOf(resultPager.getNbTotalResults()));
+            this.target.getElement().setInnerText(String.valueOf(resultPager.getNbTotalResults()));
         }
     }
 
@@ -183,8 +183,7 @@ public class ProfileQuickDetailsPage extends AbstractProfileDetailsPage {
         @Override
         protected void setData(final String json, final Map<String, String> headers) {
             final ApiSearchResultPager resultPager = ApiSearchResultPager.parse(headers);
-            // this.target.setText(String.valueOf(resultPager.getNbTotalResults()));
-            // this.target.setText(String.valueOf(resultPager.getNbTotalResults()));
+            this.target.getElement().setInnerText(String.valueOf(resultPager.getNbTotalResults()));
         }
     }
 
@@ -211,7 +210,7 @@ public class ProfileQuickDetailsPage extends AbstractProfileDetailsPage {
         @Override
         protected void setData(final String json, final Map<String, String> headers) {
             final ApiSearchResultPager resultPager = ApiSearchResultPager.parse(headers);
-            this.target.setText(String.valueOf(resultPager.getNbTotalResults()));
+            this.target.getElement().setInnerText(String.valueOf(resultPager.getNbTotalResults()));
         }
     }
 }
