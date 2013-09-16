@@ -564,18 +564,17 @@ public class Table extends AbstractTable implements Refreshable {
         }
 
         // Check all if no checkbox unchecked
-        final boolean noCheckboxCheched = $(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() == $(".td_checkboxes input",
-                Table.this.getElement()).length();
+        final boolean noCheckboxCheched = $(".td_checkboxes :checked").length() == 0;
         if (noCheckboxCheched) {
-            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), true, true);
+            setCheckboxesValue($(".th_checkboxes input[type=checkbox]", Table.this.getElement()), true, true);
             $(".th_checkboxes label", Table.this.getElement()).addClass("checked");
         } else {
-            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), false, true);
+            setCheckboxesValue($(".th_checkboxes input[type=checkbox]", Table.this.getElement()), false, true);
             $(".th_checkboxes label", Table.this.getElement()).removeClass("checked");
         }
 
         // Set datatable class to to inform about selected or not
-        if ($(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() > 0) {
+        if ($(".td_checkboxes input[type=checkbox]", Table.this.getElement()).filter(":checked").length() > 0) {
             $(this.getElement()).addClass("linechecked");
             enableActionsLinks();
         } else {
@@ -621,7 +620,7 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     private GQuery getAllCheckboxes() {
-        return $(".td_checkboxes :checkbox", this.tableElement);
+        return $(".td_checkboxes input[type=checkbox]", this.tableElement);
     }
 
     private Element makePager(final String className) {
@@ -1042,7 +1041,7 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     private boolean isCheckable(GQuery checkboxes) {
-        return checkboxes != null && checkboxes.length() > 0;
+        return checkboxes != null && checkboxes.length() > 0 && checkboxes.attr("type").equalsIgnoreCase("checkbox");
     }
 
     public void setItemIdOnRow(boolean itemIdOnRow) {

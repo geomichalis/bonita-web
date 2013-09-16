@@ -327,7 +327,8 @@
 // ----------------------------------------------------------------------------
 @filtersPanel-titleColor: #fff;
 @filtersPanel-display: block;
-@filtersPanel-padding: 7*@h 0 0 1*@w;
+@filtersPanel-padding-left: 1*@w;
+@filtersPanel-padding: 7*@h 0 0 @filtersPanel-padding-left;
 @filtersPanel-margin: 0;
 @filtersPanel-font: @skinFont;
 @filtersPanel-position: relative;
@@ -891,7 +892,7 @@
 @form-input-radius: @defaultRadius;
 @form-input-border: @border-width solid @borderColor;
 @form-label-color: #282626;
-@form-tabs-fontSize: 18;
+@form-tabs-fontSize: 16;
 @form-labelContainer-margin: 0 0 2*@h 0; 
 @form-fieldContainer-margin: 4*@h 0 0 0;
 @form-tabsContainer-margin: 4*@h 0 0 0;
@@ -1025,8 +1026,9 @@
 @tabs-tab-radiusTR: @defaultRadius;
 @tabs-tab-radiusBR: 0;
 @tabs-tab-radiusBL: 0;
-@tabs-tab-border: @border-width solid @borderColor;
-@tabs-tab-padding: 3*@h 6*@w;
+@tabs-tab-border: @border-width solid lighten(@mainAccentColor, 8.5%);
+@tabs-tab-border-active: @border-width solid @borderColor;
+@tabs-tab-padding: 3*@h 3*@w;
 @tabs-tabActive-bgColor: #fff;
 @tabs-tabActive-txtColor: @mainAccentColor;
 @tabs-tab-txtColor: #fff;
@@ -1070,7 +1072,7 @@
 @table-shadowX: -2px;
 @table-shadowY: 2px;
 @table-shadowBlur: 3px;
-@table-shadowColor: rgba(0,0,0, 0.17);
+@table-shadowColor: #dddddd;
 @table-pager-padding: 0 3*@w 0 0 ; 
 @tableList-header-display: none;
 @tableList-header-cell-height: 3*@h;

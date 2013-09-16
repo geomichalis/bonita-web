@@ -1,17 +1,17 @@
-.fontSize(@pFontSize){
+.fontSize (@pFontSize) {
 	//@calcValue: ;
-	font-size: percentage(@pFontSize/@skinFontSize);
+	font-size: percentage(@pFontSize / @skinFontSize);
 }
 //-----------------------------------------------------------------------------
 // specific application mixin
 //-----------------------------------------------------------------------------
 
 /* buttons */
-.skinButton(@btnColor, @txtColor: #fff, @strokeColor: transparent){
+.skinButton (@btnColor , @txtColor: #fff , @strokeColor: transparent) {
 	color: @txtColor;
-	span{
+	span {
 		color: @txtColor;
-	}	
+	}
 	padding: @button-padding;
 	outline-color: lighten(@btnColor, 10%);
 	min-width: @button-minWidth;
@@ -19,62 +19,62 @@
 	border-color: darken(@btnColor, 15%);
 	text-transform: uppercase;
 	font-family: @skinFont;
-	.stroke(1px, @strokeColor);
-	.fontSize(@button-fontSize);
-	.borderRadius(@button-radius);
-	.button(@button-height);
-	.verticalGradient(lighten(@btnColor, 8.5%), 0%, @btnColor, 100%);
-	.setEnable();
-	.boxShadow(@button-shadowX, @button-shadowY, @button-shadowBlur, @button-shadowColor);
-	+a{
-		margin-left: @button-marginBetween; 
+	.stroke (1px , @strokeColor);
+	.fontSize (@button-fontSize);
+	.borderRadius (@button-radius);
+	.button (@button-height);
+	.verticalGradient (lighten(@btnColor, 8.5%) , 0% , @btnColor , 100%);
+	.setEnable ();
+	.boxShadow (@button-shadowX , @button-shadowY , @button-shadowBlur , @button-shadowColor);
+	+ a {
+		margin-left: @button-marginBetween;
 	}
 }
 
 .dynamicStroke (@txtColor) when (lightness(@txtColor) < 50%) {
-	.stroke(1px, lighten(@txtColor, 100% - lightness(@txtColor)));
+	.stroke (1px , lighten(@txtColor, 100% - lightness(@txtColor)));
 }
 
-.pagerButton(@btnColor, @btnImage, @btnImageDisable){
+.pagerButton (@btnColor , @btnImage , @btnImageDisable) {
 	outline-color: lighten(@btnColor, 10%);
 	border: @button-pager-border;
-	.hideText();
-	.borderRadius(@button-radius);
-	.button(@button-pager-height);
+	.hideText ();
+	.borderRadius (@button-radius);
+	.button (@button-pager-height);
 	width: @button-pager-width;
-	.bg(@btnImage, no-repeat, @btnColor, @button-pager-bgX, @button-pager-bgY);
-	&:hover{
+	.bg (@btnImage , no-repeat , @btnColor , @button-pager-bgX , @button-pager-bgY);
+	&:hover {
 		border: @button-pager-borderHover;
 	}
-	&.disable {
+	& .disable {
 		border: @button-pager-border-disable;
-		.bg( @btnImageDisable, no-repeat, @btnColor, @button-pager-bgX, @button-pager-bgY);
+		.bg (@btnImageDisable , no-repeat , @btnColor , @button-pager-bgX , @button-pager-bgY);
 		cursor: default;
 	}
-	+ a{
+	+ a {
 		margin: @button-pager-marginBetween;
 	}
 }
-.addButton(@btnColor, @txtColor: #fff){
-	.specialButton(@btnColor, @txtColor, transparent);
-	&:before{
+.addButton (@btnColor , @txtColor: #fff) {
+	.specialButton (@btnColor , @txtColor , transparent);
+	&:before {
 		position: absolute;
 		content: "";
 		display: block;
-		left:0;
+		left: 0;
 		top: 0;
 		height: 100%;
 		width: @addbutton-bgWidth;
-		.bg(@addbutton-bg);
+		.bg (@addbutton-bg);
 	}
 	padding: @addbutton-padding;
-	background-image: @addbutton-bg !important;
-	background-position: left center !important;
-	background-repeat: no-repeat !important;
-	text-align: @addbutton-txtAlign !important;
+	background-image: @addbutton-bg ! important;
+	background-position: left center ! important;
+	background-repeat: no-repeat ! important;
+	text-align: @addbutton-txtAlign ! important;
 }
 
-.specialButton(@btnColor, @txtColor: #fff, @strokeTxtColor:transparent){
+.specialButton (@btnColor , @txtColor: #fff , @strokeTxtColor: transparent) {
 	text-transform: uppercase;
 	color: @txtColor;
 	padding: @button-padding;
@@ -82,11 +82,11 @@
 	min-width: @button-minWidth;
 	border: @button-border;
 	border-color: darken(@btnColor, 3%);
-	.fontSize(@button-fontSize);
-	.borderRadius(@button-radius);
-	.button(@button-height);
-	.verticalGradient(lighten(@btnColor, 8.5%), 0%, @btnColor ,100%);
-	.stroke(1px, @strokeTxtColor);
+	.fontSize (@button-fontSize);
+	.borderRadius (@button-radius);
+	.button (@button-height);
+	.verticalGradient (lighten(@btnColor, 8.5%) , 0% , @btnColor , 100%);
+	.stroke (1px , @strokeTxtColor);
 	position: relative;
 }
 
@@ -100,30 +100,30 @@
 	@strokeWidth @strokeWidth 0 @strokeColor;
 }
 
-.loginButton(@btnColor, @txtColor: #fff){
-	.pointerAsLink();
-	.borderRadius(@loginPage-form-formactions-button-radius);
+.loginButton (@btnColor , @txtColor: #fff) {
+	.pointerAsLink ();
+	.borderRadius (@loginPage-form-formactions-button-radius);
 	color: @txtColor;
 	padding: @loginPage-form-formactions-button-padding;
 	outline-color: lighten(@btnColor, 10%);
 	min-width: @loginPage-form-formactions-button-minWidth;
 	border: @button-border;
 	border-color: darken(@btnColor, 2%);
-	.fontSize(@button-fontSize);
-	.button(@loginPage-form-formactions-button-height);
-	.verticalGradient(lighten(@btnColor, 8.5%), 0%, @btnColor ,100%);
-	.boxShadowInner(@loginPage-form-formactions-button-shadowInnerX, @loginPage-form-formactions-button-shadowInnerY, @loginPage-form-formactions-button-shadowInnerBlur, lighten(desaturate(@btnColor,25%), 29%));
+	.fontSize (@button-fontSize);
+	.button (@loginPage-form-formactions-button-height);
+	.verticalGradient (lighten(@btnColor, 8.5%) , 0% , @btnColor , 100%);
+	.boxShadowInner (@loginPage-form-formactions-button-shadowInnerX , @loginPage-form-formactions-button-shadowInnerY , @loginPage-form-formactions-button-shadowInnerBlur , lighten(desaturate(@btnColor, 25%), 29%));
 }
 
 /* filters */
 
-.bgFilter(@bg, @bgColor: transparent, @bgLeft: @filtersPanel-filters-currentLine-backgroundLeft){
-	.bg(@bg, no-repeat, @bgColor, @bgLeft, @filtersPanel-filters-currentLine-backgroundTop);
+.bgFilter (@bg , @bgColor: transparent , @bgLeft: @filtersPanel-filters-currentLine-backgroundLeft) {
+	.bg (@bg , no-repeat , @bgColor , @bgLeft , @filtersPanel-filters-currentLine-backgroundTop);
 }
-.bgSubFilter(@bg, @bgColor: transparent, @bgLeft: @filtersPanel-subfilters-currentLine-backgroundLeft){
+.bgSubFilter (@bg , @bgColor: transparent , @bgLeft: @filtersPanel-subfilters-currentLine-backgroundLeft) {
 	padding: @filtersPanel-filters-paddingTop @filtersPanel-filters-paddingRight @filtersPanel-filters-paddingBottom @filtersPanel-subfilters-paddingLeft;
-	.fontSize(@filtersPanel-subfilters-fontSize);
-	.bgFilter(@bg, @bgColor, @bgLeft);
+	.fontSize (@filtersPanel-subfilters-fontSize);
+	.bgFilter (@bg , @bgColor , @bgLeft);
 }
 .bgHoverFilter(@bg, @bgLeft: @filtersPanel-filters-currentLine-backgroundLeft, @bgTop: @filtersPanel-filters-currentLine-backgroundTop, @c1:@header-menu-gradientColor1Hover, @p1:@header-menu-gradientPosition1, @c2:@header-menu-gradientColor2Hover, @p2:@header-menu-gradientPosition2){
 	.bg(@bg, ~"no-repeat @{bgLeft} @{bgTop},-webkit-linear-gradient(top, @{c1} @{p1}, @{c2} @{p2})");
@@ -147,86 +147,87 @@
 /* avatar sizes */
 
 
-.iconMixin(@context) when (@context = list){
-	.iconMaxSize(@tablesPanel-table-icon-maxHeight, @tablesPanel-table-icon-maxWidth);
+.iconMixin (@context) when (@context=list) {
+	.iconMaxSize (@tablesPanel-table-icon-maxHeight , @tablesPanel-table-icon-maxWidth);
 }
 
-.iconMixin(@context) when (@context = details){
-	.iconMaxSize(@detailsPanel-table-icon-maxHeight, @detailsPanel-table-icon-maxWidth);
+.iconMixin (@context) when (@context=details) {
+	.iconMaxSize (@detailsPanel-table-icon-maxHeight , @detailsPanel-table-icon-maxWidth);
 }
 
-.iconMixin(@context) when (@context = moreDetails){
-	.iconMaxSize(@moreDetails-table-icon-maxHeight, @moreDetails-table-icon-maxWidth);
+.iconMixin (@context) when (@context=moreDetails) {
+	.iconMaxSize (@moreDetails-table-icon-maxHeight , @moreDetails-table-icon-maxWidth);
 }
 
-.iconMixin(@context) when (@context = popup){
-	.iconMaxSize(@popup-table-icon-maxHeight, @popup-table-icon-maxWidth);
+.iconMixin (@context) when (@context=popup) {
+	.iconMaxSize (@popup-table-icon-maxHeight , @popup-table-icon-maxWidth);
 }
 
-.iconMixin(@context) when (@context = userAvatar){
-	.iconMaxSize(@userAvatar-table-icon-maxHeight, @userAvatar-table-icon-maxWidth);
+.iconMixin (@context) when (@context=userAvatar) {
+	.iconMaxSize (@userAvatar-table-icon-maxHeight , @userAvatar-table-icon-maxWidth);
 }
 
-.iconMaxSize(@max-height, @max-width) {
+.iconMaxSize (@max-height , @max-width) {
 	img {
 		max-height: @max-height;
 		max-width: @max-width;
-	}	
+	}
 }
 
 
 /* more details mixins which are used in specific views (ej. report)*/
-.moreDetails_title(){
+.moreDetails_title () {
 	overflow: hidden;
 	float: @moreDetails-metadatas-title-float;
 	width: @moreDetails-metadatas-title-width;
 	padding: @moreDetails-metadatas-title-padding;
 	margin: @moreDetails-metadatas-title-margin;
-	.fontSize(@moreDetails-metadatas-title-fontSize);
-	.boxSizing();
+	.fontSize (@moreDetails-metadatas-title-fontSize);
+	.boxSizing ();
 }
-.moreDetails_description(){
+.moreDetails_description () {
 	overflow: hidden;
 	padding: @moreDetails-metadatas-description-padding;
 	float: @moreDetails-metadatas-description-float;
 	width: @moreDetails-metadatas-description-width;
-	.boxSizing();
+	.boxSizing ();
 	text-overflow: ellipsis;
 	word-wrap: break-word;
-	padding-bottom:  @moreDetails-metadatas-description-padding-bottom;
+	padding-bottom: @moreDetails-metadatas-description-padding-bottom;
 }
 
-.label(){
+.label () {
 	color: @mainAccentColor;
 }
-label{
-	.label();
+label {
+	.label ();
 }
-.moreDetails_section_title{
+.moreDetails_section_title {
 	padding: @moreDetails-title-padding;
 	margin: @moreDetails-title-margin;
 	display: inline-block;
-	.fontSize(@moreDetails-title-fontSize);
+	.fontSize (@moreDetails-title-fontSize);
 }
-.table_header(){
+.table_header () {
 	display: table-header-group;
 	float: none;
 	width: 100%;
-	color: @table-header-color; 
+	color: @table-header-color;
 	border-collapse: separate;
-	.tr{
+	.tr {
+		position: relative;
 		display: table-row;
 		float: none;
-		.verticalGradient(@table-header-gradientColor1, @table-header-gradientPosition1, @table-header-gradientColor2, @table-header-gradientPosition2);
-		.th{
+		.verticalGradient (@table-header-gradientColor1 , @table-header-gradientPosition1 , @table-header-gradientColor2 , @table-header-gradientPosition2);
+		.th {
 			position: relative;
-			.fontSize(@table-header-fontSize);
+			.fontSize (@table-header-fontSize);
 			height: @table-header-cell-height;
 			padding: @table-header-cell-padding;
 			border: none;
 			display: table-cell;
 			float: none;
-			&:before{
+			&:before {
 				border-left: @table-header-cell-borderLeft;
 				margin: @table-header-cell-border-top 0 0 (0 - @table-header-cell-paddingX);
 				content: "";
@@ -235,52 +236,57 @@ label{
 				height: @table-header-cell-borderHeight;
 				position: absolute;
 			}
-			&_1:before{
+			& _1:before {
 				display: none;
 			}
-			&_1{
-				.borderRadius(@defaultRadius, 0px, 0px, 0px);			
+			& _1 {
+				.borderRadius (@defaultRadius , 0px , 0px , 0px);
 			}
-			&_last{
-				.borderRadius(0px, @defaultRadius, 0px, 0px);
-			}						
+			& _last {
+				.borderRadius (0px , @defaultRadius , 0px , 0px);
+			}
 		}
 	}
 }
 
-.table_line(){
+.table_line () {
 	width: 100%;
 	display: table-row;
 	float: none;
-	.td{
+	position: relative;
+	background: #fff;
+	.td {
+		position: relative;
 		float: none;
 		display: table-cell;
 		border: @table-cell-border;
 		padding: @table-cell-padding;
 		vertical-align: middle;
-		&.td_icon {
-			.iconMixin(list);
+		& .td_icon {
+			.iconMixin (list);
 		}
-		&.td_actions {
-			a{
+		& .td_actions {
+			a {
 				margin-right: 8px;
 				text-decoration: underline;
 			}
 		}
 	}
-	&_last{
-		.td{
-			&_1{
-				.borderRadius(0px, 0px, 0px, @defaultRadius);
+	& _last {
+		.td {
+			& _1 {
+				position: relative;
+				.borderRadius (0px , 0px , 0px , @defaultRadius);
 			}
-			&_last{
-				.borderRadius(0px, 0px, @defaultRadius, 0px);
+			& _last {
+				position: relative;
+				.borderRadius (0px , 0px , @defaultRadius , 0px);
 			}
 		}
 	}
 
 }
-.section_border(){
+.section_border () {
 	border-top: @moreDetails-section-header-borderTop;
 	padding: @moreDetails-section-header-padding;
 }
