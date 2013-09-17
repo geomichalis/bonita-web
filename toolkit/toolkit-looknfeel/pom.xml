@@ -56,7 +56,16 @@
 						<groupId>ro.isdc.wro4j</groupId>
 						<artifactId>wro4j-maven-plugin</artifactId>
 						<version>${wro4j.version}</version>
+						<executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
 						<configuration>
+						    <contextFolder>src/main</contextFolder>
 							<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 							<extraConfigFile>${wro.config}/wro.properties</extraConfigFile>
 
@@ -66,14 +75,6 @@
 							<cssDestinationFolder>${output.directory}/css</cssDestinationFolder>
 							<ignoreMissingResources>false</ignoreMissingResources>
 						</configuration>
-						<executions>
-							<execution>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 
 					<!-- Resource packaging -->
@@ -99,6 +100,7 @@
 				</plugins>
 			</build>
 		</profile>
+		
 		<profile>
 			<id>css</id>
 			<activation>
