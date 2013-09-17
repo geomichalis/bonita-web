@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<artifactId>bos-web-toolkit</artifactId>
 		<groupId>org.bonitasoft.web.toolkit</groupId>
 		<version>6.1.0-SNAPSHOT</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
+
 	<artifactId>toolkit-looknfeel</artifactId>
 	<name>toolkit looknfeel</name>
 	<packaging>jar</packaging>
@@ -14,8 +15,8 @@
 		<wro4j.version>1.7.0</wro4j.version>
 		<output.directory>${project.build.directory}/${project.build.finalName}</output.directory>
 		<wro.config>${basedir}/src/main/wro/wro-build-time</wro.config>
-		<assembly.config>${basedir}/src/main/resources</assembly.config>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>ro.isdc.wro4j</groupId>
@@ -28,6 +29,7 @@
 			<version>${wro4j.version}</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -36,6 +38,7 @@
 			</resource>
 		</resources>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>prod</id>
@@ -53,7 +56,16 @@
 						<groupId>ro.isdc.wro4j</groupId>
 						<artifactId>wro4j-maven-plugin</artifactId>
 						<version>${wro4j.version}</version>
+						<executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
 						<configuration>
+						    <contextFolder>src/main</contextFolder>
 							<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 							<extraConfigFile>${wro.config}/wro.properties</extraConfigFile>
 
@@ -63,14 +75,6 @@
 							<cssDestinationFolder>${output.directory}/css</cssDestinationFolder>
 							<ignoreMissingResources>false</ignoreMissingResources>
 						</configuration>
-						<executions>
-							<execution>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 
 					<!-- Resource packaging -->
@@ -96,6 +100,7 @@
 				</plugins>
 			</build>
 		</profile>
+		
 		<profile>
 			<id>css</id>
 			<activation>
