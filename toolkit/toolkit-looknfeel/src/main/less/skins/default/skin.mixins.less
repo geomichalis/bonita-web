@@ -46,7 +46,7 @@
 	&:hover {
 		border: @button-pager-borderHover;
 	}
-	& .disable {
+	&.disable {
 		border: @button-pager-border-disable;
 		.bg (@btnImageDisable , no-repeat , @btnColor , @button-pager-bgX , @button-pager-bgY);
 		cursor: default;
@@ -236,13 +236,13 @@ label {
 				height: @table-header-cell-borderHeight;
 				position: absolute;
 			}
-			& _1:before {
+			&_1:before {
 				display: none;
 			}
-			& _1 {
+			&_1 {
 				.borderRadius (@defaultRadius , 0px , 0px , 0px);
 			}
-			& _last {
+			&_last {
 				.borderRadius (0px , @defaultRadius , 0px , 0px);
 			}
 		}
@@ -262,23 +262,23 @@ label {
 		border: @table-cell-border;
 		padding: @table-cell-padding;
 		vertical-align: middle;
-		& .td_icon {
+		&.td_icon {
 			.iconMixin (list);
 		}
-		& .td_actions {
+		&.td_actions {
 			a {
 				margin-right: 8px;
 				text-decoration: underline;
 			}
 		}
 	}
-	& _last {
+	&_last {
 		.td {
-			& _1 {
+			&_1 {
 				position: relative;
 				.borderRadius (0px , 0px , 0px , @defaultRadius);
 			}
-			& _last {
+			&_last {
 				position: relative;
 				.borderRadius (0px , 0px , @defaultRadius , 0px);
 			}
