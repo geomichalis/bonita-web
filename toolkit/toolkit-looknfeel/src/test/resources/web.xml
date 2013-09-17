@@ -3,43 +3,24 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="all-in-one" version="2.5">
+
 	<display-name>Bonita</display-name>
+
 	<filter>
 		<filter-name>WebResourceOptimizer</filter-name>
 		<filter-class>ro.isdc.wro.http.WroFilter</filter-class>
 
 	</filter>
+
 	<filter-mapping>
 		<filter-name>WebResourceOptimizer</filter-name>
 		<url-pattern>/bonita.css</url-pattern>
 	</filter-mapping>
+
 	<listener>
 		<listener-class>ro.isdc.wro.http.WroServletContextListener</listener-class>
 	</listener>
-	<!-- 
-	<servlet>
-		<servlet-name>wroCssResources</servlet-name>
-		<servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<init-param>
-			<param-name>ProxyTo</param-name>
-			<param-value>http://localhost:8888/portal/css</param-value>
-		</init-param>
-		<init-param>
-			<param-name>Prefix</param-name>
-			<param-value>/css</param-value>
-		</init-param>
-	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>wroNotCss</servlet-name>
-		<url-pattern>/portal/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>wroCssResources</servlet-name>
-		<url-pattern>/css/*</url-pattern>
-	</servlet-mapping> -->
-	
 	<servlet>
 		<servlet-name>wroFont</servlet-name>
 		<servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
@@ -52,8 +33,10 @@
 			<param-value>/css/skins/default/fonts/</param-value>
 		</init-param>
 	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>wroFont</servlet-name>
 		<url-pattern>/css/skins/default/fonts/*</url-pattern><!-- TODO change default by skin directory-->
 	</servlet-mapping>
+
 </web-app>
