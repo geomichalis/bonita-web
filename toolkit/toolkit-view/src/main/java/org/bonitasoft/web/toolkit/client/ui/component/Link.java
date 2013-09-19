@@ -44,6 +44,14 @@ public class Link extends Clickable {
     // CONSTRUCTORS
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // UiBinder support
+    // //////////////////
+
+    public Link(final String label, final String tooltip) {
+        super(tooltip);
+        this.label = label;
+    }
+
     // With Action
     // /////////////////
 

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.web.toolkit.client.ui.component;
 
+import com.google.gwt.uibinder.client.UiConstructor;
 import org.bonitasoft.web.toolkit.client.common.TreeIndexed;
 import org.bonitasoft.web.toolkit.client.ui.JsId;
 import org.bonitasoft.web.toolkit.client.ui.action.Action;
@@ -25,6 +26,11 @@ import org.bonitasoft.web.toolkit.client.ui.utils.TypedString;
  * @author Séverin Moussel
  */
 public class Button extends Link {
+
+    @UiConstructor
+    public Button(String label, String tooltip) {
+        super(label, tooltip);
+    }
 
     /**
      * This constructor must be prefered to other
