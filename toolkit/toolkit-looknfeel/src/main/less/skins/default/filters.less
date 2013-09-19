@@ -77,7 +77,7 @@
 				display: block;
 				padding: @filtersPanel-filters-paddingTop @filtersPanel-filters-paddingRight @filtersPanel-filters-paddingBottom @filtersPanel-filters-paddingLeft;
 				min-height: @filtersPanel-filters-height - @filtersPanel-filters-paddingTop - @filtersPanel-filters-paddingBottom;
-				
+				position: relative;
 				&.enabledprocesses {
 					.bgFilter (@filtersPanel-filters-bgAvailable);
 					&:hover {
@@ -240,21 +240,26 @@
 					background-color: @filtersPanel-filterHover-bgColor ! important;
 				}
 			}
-			.body a.current , .body a.current:hover {
+			.body{
 				position: relative;
-				background-color: @filtersPanel-filtersCurrent-background ! important;
-				color: @filtersPanel-filtersCurrent-link-textColor;
-				&:after {
-					position: absolute;
-					content: "";
-					display: block;
-					width: @filtersPanel-filtersCurrent-width;
-					.bg (@filtersPanel-filtersCurrent-bgArrow , no-repeat , @filtersPanel-filtersCurrent-background , center , right);
-					top: 0;
-					right: @filtersPanel-filtersCurrent-positionRight;
-					margin-right: 0px;
-					height: 100%;
-					z-index: @zIndex-currentArrow;
+				a.current , .body a.current:hover {
+						
+					position: relative;
+					background-color: @filtersPanel-filtersCurrent-background ! important;
+					color: @filtersPanel-filtersCurrent-link-textColor;
+					&:after {
+						position: absolute;
+						content: "";
+						display: block;
+						width: @filtersPanel-filtersCurrent-width;
+						.bg (@filtersPanel-filtersCurrent-bgArrow , no-repeat , @filtersPanel-filtersCurrent-background , center , right);
+						top: 0;
+						right: @filtersPanel-filtersCurrent-positionRight;
+						margin-right: 0px;
+						height: 100%;
+						z-index: @zIndex-currentArrow;
+					}
+			
 				}
 			}
 		}
@@ -310,7 +315,7 @@
 		}
 
 	}
-	& processlistingadmin {
+	&processlistingadmin {
 		.filters_panel {
 			.resource_filters {
 				.header {

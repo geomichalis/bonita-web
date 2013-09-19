@@ -210,7 +210,13 @@
 	background: url("../css/skins/@{skinpath}/images/@{img}") @options !important;
 }
 .bgPie(@img, @options){
-	-pie-background: url("../css/skins/@{skinpath}/images/@{img}") @options !important;
+	.bgPie(@img, @options,"");
+}
+.bg(@img, @options,@important:"!important"){
+	background: url("../css/skins/@{skinpath}/images/@{img}") @options ~"@{important}";
+}
+.bgPie(@img, @options,@important:"!important"){
+	-pie-background: url("../css/skins/@{skinpath}/images/@{img}") @options ;
 }
 
 

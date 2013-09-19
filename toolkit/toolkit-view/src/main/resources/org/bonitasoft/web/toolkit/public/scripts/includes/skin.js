@@ -28,11 +28,11 @@ $(function() {
 				if(inputId!= ""){
 					forvalue = inputId;
 				}
-				$(this).parent().append('<label for="'+forvalue+'">&nbsp;</label>');
+				$(this).parent().append('<div><label for="'+forvalue+'" id=\"fsdfsf\">&nbsp;</label></div>');
 				$('label', $(this).parent()).click(function(e){
 					var cb = $('input[type=checkbox],input[type=radio]', $(this).parent());
 					cb.checkToggle();
-					cb.trigger('click')
+					cb.trigger('click');
 					return false;
 				})
 			});

@@ -150,6 +150,8 @@ form {
 	.custom- {
 		&checkbox , &radio {
 			position: relative;
+			height: @form-input-checkbox-height;
+			width: @form-input-checkbox-width;
 			input {
 				position: absolute;
 				left: 0;
@@ -159,7 +161,7 @@ form {
 			}
 			label {
 				display: block;
-				position: relative;
+				position: absolute;
 				left: 0;
 				top: 0;
 				margin: 0;
