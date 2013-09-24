@@ -28,7 +28,7 @@ $(function() {
 				if(inputId!= ""){
 					forvalue = inputId;
 				}
-				$(this).parent().append('<div><label for="'+forvalue+'" id=\"fsdfsf\">&nbsp;</label></div>');
+				$(this).parent().append('<div><label for="'+forvalue+'" >&nbsp;</label></div>');
 				$('label', $(this).parent()).click(function(e){
 					var cb = $('input[type=checkbox],input[type=radio]', $(this).parent());
 					cb.checkToggle();

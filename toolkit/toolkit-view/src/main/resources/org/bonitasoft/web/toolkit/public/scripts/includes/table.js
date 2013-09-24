@@ -57,7 +57,11 @@ $(function() {
 				$('.tr', $(this)).each(function() {
 					var line = $(this);
 					line.addClass(cnt_lines % 2 == 0 ? 'even' : 'odd').addClass('tr_' + (cnt_lines++));
-
+					if($.browser.msie && parseInt($.browser.version, 10) == 8){
+						$('.td_checkboxes label', line).click(function(e){
+							e.stopPropagation();
+						});
+					}
 					cnt_cols = 0;
 					$('.td, .th', $(this)).each(function() {
 						var e = $(this);

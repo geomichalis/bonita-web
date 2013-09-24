@@ -41,11 +41,11 @@ jQuery.fn.customInput = function(){
 			//bind custom event, trigger it, bind click,focus,blur events					
 			input.bind('updateState', function(){	
 				if (input.is(':checked')) {
-					if (input.is(':radio')) {				
+					if (input.is(':radio')) {
 						allInputs.each(function(){
 							$('label[for='+$(this).attr('id')+']').removeClass('checked');
-						});		
-					};
+						});
+					}
 					label.addClass('checked');
 				}
 				else { label.removeClass('checked checkedHover checkedFocus'); }
@@ -65,7 +65,6 @@ jQuery.fn.customInput = function(){
 			
 			if($.browser.msie && $.browser.version == '8.0'){
 				toto.click(function(){ 
-					alert('totocliksec');
 					$(input).trigger('updateState'); 
 				});
 			}

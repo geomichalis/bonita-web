@@ -564,17 +564,18 @@ public class Table extends AbstractTable implements Refreshable {
         }
 
         // Check all if no checkbox unchecked
-        final boolean noCheckboxCheched = $(".td_checkboxes :checked").length() == 0;
+        final boolean noCheckboxCheched = $(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() == $(".td_checkboxes input",
+                Table.this.getElement()).length();
         if (noCheckboxCheched) {
-            setCheckboxesValue($(".th_checkboxes input[type=checkbox]", Table.this.getElement()), true, true);
+            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), true, true);
             $(".th_checkboxes label", Table.this.getElement()).addClass("checked");
         } else {
-            setCheckboxesValue($(".th_checkboxes input[type=checkbox]", Table.this.getElement()), false, true);
+            setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), false, true);
             $(".th_checkboxes label", Table.this.getElement()).removeClass("checked");
         }
 
         // Set datatable class to to inform about selected or not
-        if ($(".td_checkboxes input[type=checkbox]", Table.this.getElement()).filter(":checked").length() > 0) {
+        if ($(".td_checkboxes input", Table.this.getElement()).filter(":checked").length() > 0) {
             $(this.getElement()).addClass("linechecked");
             enableActionsLinks();
         } else {
