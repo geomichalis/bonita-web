@@ -364,7 +364,7 @@
 			<properties>
 				<bonita.home>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home>
 				<bonita.home.ref>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home.ref>
-				<bonita.css>css/bonita.css</bonita.css>
+				<bonita.css>portal/css/bonita.css</bonita.css>
 			</properties>
 			<build>
 				<plugins>
@@ -441,7 +441,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<bonita.css>css/bonita.css</bonita.css>
+				<bonita.css>portal/css/bonita.css</bonita.css>
 			</properties>
 		</profile>
 		<!-- WRO CSS MANAGEMENT -->
