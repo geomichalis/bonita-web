@@ -28,14 +28,11 @@ $(function() {
 				if(inputId!= ""){
 					forvalue = inputId;
 				}
-				$(this).parent().append('<label for="'+forvalue+'" >&nbsp;</label>');
-				$('label', $(this).parent()).click(function(e){
-					var cb = $('input[type=checkbox],input[type=radio]', $(this).closest(".custom-checkbox"));
-					// trigger change
-					// check box's label toggle (checked class)
+				label = $('<label for="'+forvalue+'" >&nbsp;</label>');
+				label.click(function(e){
 					e.stopPropagation();
-					return false;
-				})
+				});
+				$(this).parent().append(label);
 			});
 			$('input', context).customInput();
 			$(".formentry.select .input", context).each(function(i,e){

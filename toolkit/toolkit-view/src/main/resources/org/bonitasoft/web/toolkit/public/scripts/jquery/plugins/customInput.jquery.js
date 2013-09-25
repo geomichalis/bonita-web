@@ -18,11 +18,11 @@ jQuery.fn.customInput = function(){
 			
 			//get type, for classname suffix 
 			var inputType = (input.is('[type=checkbox]')) ? 'checkbox' : 'radio';
-			var toto =  $("<div>");
-			toto.append(label);
+			//var toto =  $("<div>");
+			//toto.append(label);
 			
 			// wrap the input + label in a div 
-			$('<div class="custom-'+ inputType +'"></div>').insertBefore(input).append(input, toto);
+			$('<div class="custom-'+ inputType +'"></div>').insertBefore(input).append(input, label);
 			
 			// find all inputs in this set using the shared name attribute
 			var allInputs = $('input[name='+input.attr('name')+']');
@@ -63,11 +63,11 @@ jQuery.fn.customInput = function(){
 			})
 			.blur(function(){ label.removeClass('focus checkedFocus'); });
 			
-			if($.browser.msie && $.browser.version == '8.0'){
+			/*if($.browser.msie && $.browser.version == '8.0'){
 				toto.click(function(){ 
 					$(input).trigger('updateState'); 
 				});
-			}
+			}*/
 			
 			
 		}

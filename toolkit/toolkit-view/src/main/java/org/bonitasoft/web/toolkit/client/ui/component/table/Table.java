@@ -542,18 +542,11 @@ public class Table extends AbstractTable implements Refreshable {
 
                     @Override
                     public void f(final Element e) {
-                        setCheckboxesValue(getAllCheckboxes(), $(e).is(":checked"), false);
+                        Object checkedValue = $(e).prop("checked");
+                        setCheckboxesValue(getAllCheckboxes(), (Boolean) checkedValue, false);
                     }
 
-                }).click(new Function() {
-
-                    @Override
-                    public boolean f(final Event e) {
-                        e.stopPropagation();
-                        return true;
-                    }
-                }
-                        )).append(
+                })).append(
                 $(HTML.label(_("All"), checkAllId)));
     }
 
@@ -571,10 +564,10 @@ public class Table extends AbstractTable implements Refreshable {
                 Table.this.getElement()).length();
         if (noCheckboxCheched) {
             setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), true, true);
-            $(".th_checkboxes label", Table.this.getElement()).addClass("checked");
+            // $(".th_checkboxes label", Table.this.getElement()).addClass("checked");
         } else {
             setCheckboxesValue($(".th_checkboxes", Table.this.getElement()).filter(":checkbox"), false, true);
-            $(".th_checkboxes label", Table.this.getElement()).removeClass("checked");
+            // $(".th_checkboxes label", Table.this.getElement()).removeClass("checked");
         }
 
         // Set datatable class to to inform about selected or not
@@ -1047,7 +1040,7 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     private boolean isCheckable(GQuery checkboxes) {
-        return checkboxes != null && checkboxes.length() > 0 && checkboxes.attr("type").equalsIgnoreCase("checkbox");
+        return checkboxes != null && checkboxes.length() > 0 && checkboxes.is(":checkbox");
     }
 
     public void setItemIdOnRow(boolean itemIdOnRow) {
