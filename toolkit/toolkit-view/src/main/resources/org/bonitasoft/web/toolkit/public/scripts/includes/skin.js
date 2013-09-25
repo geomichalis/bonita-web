@@ -28,11 +28,12 @@ $(function() {
 				if(inputId!= ""){
 					forvalue = inputId;
 				}
-				$(this).parent().append('<div><label for="'+forvalue+'" >&nbsp;</label></div>');
+				$(this).parent().append('<label for="'+forvalue+'" >&nbsp;</label>');
 				$('label', $(this).parent()).click(function(e){
-					var cb = $('input[type=checkbox],input[type=radio]', $(this).parent());
-					cb.checkToggle();
-					cb.trigger('click');
+					var cb = $('input[type=checkbox],input[type=radio]', $(this).closest(".custom-checkbox"));
+					// trigger change
+					// check box's label toggle (checked class)
+					e.stopPropagation();
 					return false;
 				})
 			});

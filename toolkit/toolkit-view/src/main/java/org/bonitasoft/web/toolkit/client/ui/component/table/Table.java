@@ -510,21 +510,24 @@ public class Table extends AbstractTable implements Refreshable {
 
             @Override
             public void f(final Element k) {
-                $(k).change(new Function() {
+                final GQuery checkbox = $(k);
+                checkbox.change(new Function() {
 
                     @Override
-                    public void f(final Element e) {
+                    public boolean f(Event e) {
                         processEvent($(e));
+                        return true;
                     }
-
                 });
 
-                $(k).click(new Function() {
+                // fix click propagation to line
+                checkbox.click(new Function() {
 
                     @Override
                     public boolean f(final Event e) {
-                        processEvent($(e.getEventTarget()));
-                        return false;
+                        // simulate check box toggle because we stopped propagation
+                        e.stopPropagation();
+                        return true;
                     }
                 });
 
@@ -1031,9 +1034,11 @@ public class Table extends AbstractTable implements Refreshable {
     private void setCheckboxesValue(GQuery checkboxes, boolean value, boolean silent) {
         if (isCheckable(checkboxes)) {
             if (value) {
-                checkboxes.attr("checked", "checked");
+                // checkboxes.attr("checked", "checked");
+                checkboxes.prop("checked", true);
             } else {
-                checkboxes.removeAttr("checked");
+                // checkboxes.removeAttr("checked");
+                checkboxes.prop("checked", false);
             }
             if (!silent) {
                 checkboxes.trigger(Event.ONCHANGE);
