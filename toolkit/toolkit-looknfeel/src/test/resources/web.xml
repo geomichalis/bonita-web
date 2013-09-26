@@ -14,7 +14,7 @@
 
 	<filter-mapping>
 		<filter-name>WebResourceOptimizer</filter-name>
-		<url-pattern>/bonita.css</url-pattern>
+		<url-pattern>/css/bonita.css</url-pattern>
 	</filter-mapping>
 
 	<listener>
