@@ -322,6 +322,9 @@
 @tablesPanel-search-button-height: 17px;
 @tablesPanel-search-button-top: 9px;
 @tablesPanel-search-button-right: @tablesPanel-search-inputContainer-paddingRight + 3*@w;
+
+@tablesPanel-refresh-button-bg: "refresh.png";
+@tablesPanel-refresh-button-min-width: 20px;
 // ----------------------------------------------------------------------------
 // Lists : filters
 // ----------------------------------------------------------------------------
@@ -420,11 +423,12 @@
 @filtersPanel-filters-filtersResourceTitle-padding: @filtersPanel-filters-paddingTop @filtersPanel-filters-paddingRight @filtersPanel-filters-paddingBottom 4*@w;
 @filtersPanel-filters-filtersResourceTitle-borderColor1: darken(@mainAccentColor, 7%);
 @filtersPanel-filters-filtersResourceTitle-borderHeight: @border-width;
+@filtersPanel-filters-filtersResourceTitle-top-borderHeight: 3px;
 @filtersPanel-filters-filtersResourceTitle-borderColor2: lighten(@mainAccentColor, 8.5%);
 
 @filtersPanel-filters-filtersResourceTitle-borderTop: @filtersPanel-filters-filtersResourceTitle-borderHeight solid @filtersPanel-filters-filtersResourceTitle-borderColor1;
 @filtersPanel-filters-filtersResourceTitle-borderBottom: @filtersPanel-filters-filtersResourceTitle-borderHeight solid @filtersPanel-filters-filtersResourceTitle-borderColor2;
-@filtersPanel-filters-filtersResourceTitleContainer-borderTop: @filtersPanel-filters-filtersResourceTitle-borderHeight solid @filtersPanel-filters-filtersResourceTitle-borderColor2;
+@filtersPanel-filters-filtersResourceTitleContainer-borderTop: @filtersPanel-filters-filtersResourceTitle-top-borderHeight solid @filtersPanel-filters-filtersResourceTitle-borderColor2;
 @filtersPanel-filters-filtersResourceTitleContainer-borderBottom: @filtersPanel-filters-filtersResourceTitle-borderHeight @filtersPanel-filters-filtersResourceTitle-borderColor1;
 @filtersPanel-filters-filtersResourceTitle-process-bgImage: "filters-resource-process.png";
 @filtersPanel-filters-filtersResourceTitle-process-bgX: 4*@w;

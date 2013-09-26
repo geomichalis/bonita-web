@@ -375,7 +375,7 @@
 						<executions>
 							<execution>
 								<id>use-good-css</id>
-								<phase>compile</phase>
+								<phase>generate-resource</phase>
 								<goals>
 									<goal>run</goal>
 								</goals>

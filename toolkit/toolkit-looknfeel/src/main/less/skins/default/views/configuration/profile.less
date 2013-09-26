@@ -17,8 +17,15 @@
 			float: left;
 			position: relative;
 			
+			#btn-addprofileentry {
+				.noBoxShadow()
+			}
+
 			>.btn-action{
 				margin: @profileMoreDetails-addMenulink-margin;
+				#btn-addprofileentry {
+					color:red;
+				}
 			}
 			> .tablePannel {
 				float: left;
@@ -51,7 +58,7 @@
 								background: @header-submenuCurrent-bgColor;
 								text-align: left;
 								&:hover{
-									cursor: n-resize;
+									cursor: move;
 								}
 								&_last{
 									.td{
@@ -83,18 +90,21 @@
 									padding: 0;
 									a {
 										margin: 0;
+										visibility: hidden;
+                                        display: inline-block;
+                                        width: @profileMoreDetails-deleteProfileEntryLink-width;
+                                        .height(@header-menu-height);
+                                        .hideText();
+                                        vertical-align: middle;
 										&.deleteProfileEntryLink{
-											visibility: hidden;
-											display: block;
-											width: @profileMoreDetails-deleteProfileEntryLink-width;
-											.hideText();
 											.bg(@profileMoreDetails-deleteProfileEntryLink-bg);
-											.height(@header-menu-height);
-											width: @profileMoreDetails-deleteProfileEntryLink-width;
+										}
+										&.editProfileEntryLink{
+											.bg("pencil.png");
 										}
 									}
 								}
-								&:hover > .td_actions a.deleteProfileEntryLink {
+								&:hover > .td_actions a {
 									visibility: visible;
 								}
 							}
@@ -104,7 +114,7 @@
 								text-align: @profileMoreDetails-menuEditor-folder-textAlign;
 								.height(@header-menu-height);
 								&:hover{
-									cursor: e-resize;
+									cursor: move;
 								}
 								> .td {
 									border: none;
@@ -148,6 +158,15 @@
 .page_resetMenuPopupPage {
 	.resetMenuButtons {
 		text-align:center;
+	}
+}
+
+.page_AddCustomProfileTab .body {
+	.datatable .actions {
+		display: none;
+	}
+	.form {
+		margin-top: 0;
 	}
 }
 
