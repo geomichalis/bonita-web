@@ -169,13 +169,16 @@ public abstract class PageOnItem<T extends IItem> extends Page {
             @SuppressWarnings("unchecked")
             @Override
             public void onSuccess(final int httpStatusCode, final String response, final Map<String, String> headers) {
+
+                // fix for IE. Sometime IE add element evenif not in parent anymore.
+                if (!GQuery.contains(PageOnItem.this.getParentElement(), PageOnItem.this.getElement())) {
+                    return;
+                }
+
                 try {
                     PageOnItem.this.item = (T) JSonItemReader.parseItem(response, PageOnItem.this.itemDefinition);
                 } catch (final Exception e) {
                     fail(e.getMessage());
-                    return;
-                }
-                if (!GQuery.contains(PageOnItem.this.getParentElement(), PageOnItem.this.getElement())) {
                     return;
                 }
 
