@@ -334,9 +334,11 @@ public class AutoCompleteTextInput extends Components implements Refreshable {
                     t.cancel();
                     input.removeData(AUTOCOMPLETE_ONCHANGE_TIMER);
                 }
-
+                boolean isFocused = childrenFocused(AutoCompleteTextInput.this.dropdown.getElement());
+                boolean isActive = childrenFocused(AutoCompleteTextInput.this.dropdown.getElement());
+                // && $(AutoCompleteTextInput.this.dropdown.getElement()).find(":focus").size() == 0) {
                 if (!$(AutoCompleteTextInput.this.inputElement).is(".completed")
-                        && $(AutoCompleteTextInput.this.dropdown.getElement()).find(":focus").size() == 0) {
+                        && !isFocused && !isActive) {
 
                     AutoCompleteTextInput.this.reset();
                     AutoCompleteTextInput.this.dropdown.close();
@@ -345,6 +347,18 @@ public class AutoCompleteTextInput extends Components implements Refreshable {
 
         });
     }
+
+    private native boolean childrenFocused(Element e)
+    /*-{
+         if(console)  console.log($wnd.$(e).children(":focus").size() );
+        return $wnd.$(e).children(":focus").size() >0;
+    }-*/;
+
+    private native boolean childrenActived(Element e)
+    /*-{
+         if(console)  console.log($wnd.$(e).children(":active").size() );
+        return $wnd.$(e).children(":active").size() >0;
+    }-*/;
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // HTML GENERATION
