@@ -26,7 +26,7 @@
 	.verticalGradient (lighten(@btnColor, 8.5%) , 0% , @btnColor , 100%);
 	.setEnable ();
 	.boxShadow (@button-shadowX , @button-shadowY , @button-shadowBlur , @button-shadowColor);
-	+ a {
+	+ .btn, +css3-container +.btn {
 		margin-left: @button-marginBetween;
 	}
 }
@@ -51,7 +51,7 @@
 		.bg (@btnImageDisable , no-repeat , @btnColor , @button-pager-bgX , @button-pager-bgY);
 		cursor: default;
 	}
-	+ a {
+	+ a, + css3-container + a {
 		margin: @button-pager-marginBetween;
 	}
 }
