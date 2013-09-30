@@ -32,11 +32,6 @@ $(function() {
 			var datatable = $(this);
 			var table = $('.table', datatable);
 
-
-			// Add select all
-			// $('.thead .th:first', table).before('<div class="th
-			// th_checkbox"><input type="checkbox" /></div>');
-
 			// get semantics
 			var semantics = new Array();
 			$('.thead .th', table).each(function() {

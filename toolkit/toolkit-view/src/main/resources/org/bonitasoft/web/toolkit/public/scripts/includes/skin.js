@@ -19,10 +19,12 @@ $(function() {
 		if (context.is(".datatable")){
 			// hack for datatable where there is not a label after the checkbox
 			// or radio
+			var dataTable = context;
 			$("input[type=checkbox],input[type=radio]", context).each(function(i){
 				if($("label", $(this).parent()).length>0){
 					return;
 				}
+				var input = $(this);
 				var inputId = this.id;
 				var forValue = "";
 				if(inputId!= ""){
@@ -32,9 +34,12 @@ $(function() {
 				label.click(function(e){
 					e.stopPropagation();
 				});
-				$(this).parent().append(label);
+				
+				input.parent().append(label);
+				
 			});
 			$('input', context).customInput();
+			
 			$(".formentry.select .input", context).each(function(i,e){
 				resizeSelect(e);
 			});
@@ -44,6 +49,15 @@ $(function() {
 				});
 			});
 			
+			//manage all lines checked label style
+			$(context).bind("cssChange",function(){
+				var checkAllCheckbox = $(".th_checkboxes input", context);
+				if(checkAllCheckbox.prop('checked')){
+					$("label", checkAllCheckbox.parent()).addClass("checked");
+				}else{
+					$("label", checkAllCheckbox.parent()).removeClass("checked");
+				}
+			});
 			
 			
 		}

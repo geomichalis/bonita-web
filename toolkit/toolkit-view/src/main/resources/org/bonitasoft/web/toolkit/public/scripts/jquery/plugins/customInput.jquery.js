@@ -18,8 +18,6 @@ jQuery.fn.customInput = function(){
 			
 			//get type, for classname suffix 
 			var inputType = (input.is('[type=checkbox]')) ? 'checkbox' : 'radio';
-			//var toto =  $("<div>");
-			//toto.append(label);
 			
 			// wrap the input + label in a div 
 			$('<div class="custom-'+ inputType +'"></div>').insertBefore(input).append(input, label);
@@ -39,7 +37,7 @@ jQuery.fn.customInput = function(){
 			);
 			
 			//bind custom event, trigger it, bind click,focus,blur events					
-			input.bind('updateState', function(){	
+			input.bind('updateState', function(){
 				if (input.is(':checked')) {
 					if (input.is(':radio')) {
 						allInputs.each(function(){
@@ -52,7 +50,7 @@ jQuery.fn.customInput = function(){
 										
 			})
 			.trigger('updateState')
-			.click(function(){ 
+			.change(function(){ 
 				$(this).trigger('updateState'); 
 			})
 			.focus(function(){ 
@@ -62,13 +60,6 @@ jQuery.fn.customInput = function(){
 				} 
 			})
 			.blur(function(){ label.removeClass('focus checkedFocus'); });
-			
-			/*if($.browser.msie && $.browser.version == '8.0'){
-				toto.click(function(){ 
-					$(input).trigger('updateState'); 
-				});
-			}*/
-			
 			
 		}
 	});
