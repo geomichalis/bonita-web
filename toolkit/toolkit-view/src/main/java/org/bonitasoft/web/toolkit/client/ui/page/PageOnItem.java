@@ -36,6 +36,7 @@ import org.bonitasoft.web.toolkit.client.data.item.IItem;
 import org.bonitasoft.web.toolkit.client.data.item.ItemDefinition;
 import org.bonitasoft.web.toolkit.client.ui.Page;
 
+import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -174,7 +175,11 @@ public abstract class PageOnItem<T extends IItem> extends Page {
                     fail(e.getMessage());
                     return;
                 }
-                $(PageOnItem.this.getElement()).parent().children().not(PageOnItem.this.getElement()).remove();
+                if (!GQuery.contains(PageOnItem.this.getParentElement(), PageOnItem.this.getElement())) {
+                    return;
+                }
+
+                $(PageOnItem.this.getParentElement()).children().not(PageOnItem.this.getElement()).remove();
                 $(PageOnItem.this.getElement()).show();
 
                 PageOnItem.super._fillWidget(rootElement);
