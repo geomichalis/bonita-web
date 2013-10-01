@@ -21,37 +21,4 @@
 		<listener-class>ro.isdc.wro.http.WroServletContextListener</listener-class>
 	</listener>
 
-	<servlet>
-		<servlet-name>wroImages</servlet-name>
-		<servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
-		<init-param>
-			<param-name>ProxyTo</param-name>
-			<param-value>http://localhost:8888/portal/css/skins/default/images/</param-value><!-- TODO change default by skin directory-->
-		</init-param>
-		<init-param>
-			<param-name>Prefix</param-name>
-			<param-value>/portal/css/skins/default/images/</param-value>
-		</init-param>
-	</servlet>
-	<servlet>
-		<servlet-name>wroFonts</servlet-name>
-		<servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
-		<init-param>
-			<param-name>ProxyTo</param-name>
-			<param-value>http://localhost:8888/portal/css/skins/default/fonts/</param-value><!-- TODO change default by skin directory-->
-		</init-param>
-		<init-param>
-			<param-name>Prefix</param-name>
-			<param-value>/portal/css/skins/default/fonts/</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>wroImages</servlet-name>
-		<url-pattern>portal/css/skins/default/images/*</url-pattern><!-- TODO change default by skin directory-->
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>wroFonts</servlet-name>
-		<url-pattern>portal/css/skins/default/fonts/*</url-pattern><!-- TODO change default by skin directory-->
-	</servlet-mapping>
-
 </web-app>
