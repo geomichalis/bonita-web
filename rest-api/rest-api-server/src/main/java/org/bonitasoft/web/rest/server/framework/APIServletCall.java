@@ -23,11 +23,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bonitasoft.web.rest.server.api.bpm.flownode.APIActivity;
 import org.bonitasoft.web.rest.server.framework.exception.APIMissingIdException;
 import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.rest.server.framework.utils.JSonUnserializerServer;
@@ -212,15 +214,29 @@ public class APIServletCall extends ServletCall {
             }
 
             Item.setApplyValidatorMandatoryByDefault(false);
-            final Map<String, String> attributes = getJSonStreamAsItem().getAttributes();
-
-            api.runUpdate(id, attributes);
+            IItem item = getJSonStreamAsItem();
+            api.runUpdate(id, getAttributesWithDeploysAsJsonString(item));
         } catch (final APIException e) {
             e.setApi(apiName);
             e.setResource(resourceName);
             throw e;
 
         }
+    }
+
+    /**
+     * Get deploys and add them in json representation in map<String, String>
+     * 
+     * Workaround to be able to have included json objects in main object in PUT request
+     * You have to unserialize them to be able to use them in java representation 
+     */
+    private HashMap<String, String> getAttributesWithDeploysAsJsonString(IItem item) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.putAll(item.getAttributes());
+        for (Entry<String, IItem> deploy : item.getDeploys().entrySet()) {
+            map.put(deploy.getKey(), deploy.getValue().toJson());
+        }
+        return map;
     }
 
     /**
