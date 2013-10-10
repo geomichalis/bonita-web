@@ -17,11 +17,15 @@
  */
 package org.bonitasoft.web.rest.server.framework.json;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bonitasoft.web.rest.server.APITestWithMock;
 import org.bonitasoft.web.rest.server.framework.json.model.Address;
@@ -66,5 +70,17 @@ public class JacksonUnserializerTest extends APITestWithMock {
         Serializable serializable = jacksonUnserializer.unserialize(json, User.class.getName());
         
         assertThat(serializable, is((Serializable) expectedUser));
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void unserialize_can_unserialize_lists() throws Exception {
+        String json = "[1, 2, 3]";
+        
+        Serializable unserialize = jacksonUnserializer.unserialize(json, List.class.getName());
+        
+        assertThat((List<Integer>) unserialize, hasItem(1));
+        assertThat((List<Integer>) unserialize, hasItem(2));
+        assertThat((List<Integer>) unserialize, hasItem(3));
     }
 }
