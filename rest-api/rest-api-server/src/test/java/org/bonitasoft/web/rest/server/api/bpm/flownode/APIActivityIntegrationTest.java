@@ -63,31 +63,36 @@ public class APIActivityIntegrationTest extends AbstractConsoleTest {
     
     @Test
     public void api_can_update_activity_variables() throws Exception {
-        TestProcess process = new TestProcess(getProcess());
-        TestCase case1 = process.addActor(getInitiator()).setEnable(true).startCase();
-        
-        TestHumanTask nextHumanTask = case1.getNextHumanTask();
+        TestHumanTask activity = createActivityWithVariables();
         
         Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("variables", "[{\"name\": \"variable1\", \"value\": \"newValue\"}]");
-        apiActivity.runUpdate(makeAPIID(nextHumanTask.getId()), attributes);
+        String json = "[" +
+                    "{\"name\": \"variable1\", \"value\": \"newValue\"}" +
+        		"]";
+        attributes.put("variables", json);
         
-        assertThat(getDataInstance(nextHumanTask).getValue(), is((Serializable) "newValue"));
+        apiActivity.runUpdate(makeAPIID(activity.getId()), attributes);
+        
+        assertThat(activity.getDataInstance("variable1").getValue(), is((Serializable) "newValue"));
     }
 
-    private DataInstance getDataInstance(TestHumanTask nextHumanTask) throws Exception{
-        return TenantAPIAccessor.getProcessAPI(getInitiator().getSession()).getActivityDataInstance("variable1", nextHumanTask.getId());
-    }
-
-    private ProcessDefinitionBuilder getProcess() throws InvalidExpressionException {
+    /**
+     * Variables :
+     *  - variable1 : String
+     *  - variable2 : Long
+     */
+    private TestHumanTask createActivityWithVariables() throws InvalidExpressionException {
         ProcessDefinitionBuilder processDefinitionBuidler = new ProcessDefinitionBuilder().createNewInstance("processName", "1.0");
         processDefinitionBuidler.addActor("Employees", true)
                 .addDescription("This a default process")
                 .addStartEvent("Start")
                 .addUserTask("Activity 1", "Employees")
-                .addData("variable1", String.class.getName(), new ExpressionBuilder().createConstantStringExpression("value"))
+                
+                .addData("variable1", String.class.getName(), new ExpressionBuilder().createConstantStringExpression("defaultValue"))
+                .addData("variable2", Long.class.getName(), new ExpressionBuilder().createConstantLongExpression(1))
+                
                 .addEndEvent("Finish");
-        return processDefinitionBuidler;
+        return new TestProcess(processDefinitionBuidler).addActor(getInitiator()).setEnable(true).startCase().getNextHumanTask();
     }
 
 }
