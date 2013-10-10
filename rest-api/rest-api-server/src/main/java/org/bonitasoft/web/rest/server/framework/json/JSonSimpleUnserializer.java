@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.web.rest.server.framework.utils;
+package org.bonitasoft.web.rest.server.framework.json;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -34,13 +34,13 @@ import org.json.simple.parser.ParseException;
  * @author Séverin Moussel
  * 
  */
-public class JSonUnserializerServer implements JSonUnserializer {
+public class JSonSimpleUnserializer implements JSonUnserializer {
 
-    private static JSonUnserializerServer INSTANCE = null;
+    private static JSonSimpleUnserializer INSTANCE = null;
 
-    private static JSonUnserializerServer getInstance() {
+    private static JSonSimpleUnserializer getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new JSonUnserializerServer();
+            INSTANCE = new JSonSimpleUnserializer();
         }
         return INSTANCE;
     }
