@@ -75,6 +75,13 @@ public class JacksonDeserializerTest extends APITestWithMock {
         assertThat(deserializedUser, equalTo(expectedUser));
     }
     
+    @Test(expected = APIException.class)
+    public void deserializeList_throw_exception_if_json_is_not_a_list() throws Exception {
+        String json = "{\"address\":{\"street\":\"310 La Gouterie\",\"city\":\"Charnècles\"},\"id\":1,\"firstName\":\"Colin\",\"lastName\":\"Puy\",\"birthday\":428558400000}";
+        
+        jacksonDeserializer.deserializeList(json, User.class);
+    }
+    
     @Test
     public void deserializeList_can_deserialize_primitives_types() throws Exception {
         
