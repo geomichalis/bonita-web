@@ -29,7 +29,6 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bonitasoft.web.rest.server.api.bpm.flownode.APIActivity;
 import org.bonitasoft.web.rest.server.framework.exception.APIMissingIdException;
 import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.rest.server.framework.utils.JSonUnserializerServer;
@@ -77,24 +76,6 @@ public class APIServletCall extends ServletCall {
         head("Cache-Control", "no-cache,no-store,no-transform,max-age=0");
         head("Expires", df.format(expdate));
     }
-
-    // /**
-    // * @param parameter
-    // * @return
-    // */
-    // private List<ItemSearchOrder> parseOrders(final String parameter) {
-    // if (this.parameters == null) {
-    // return null;
-    // }
-    // final String[] split = parameter.split("\\s*,\\s*");
-    // final List<ItemSearchOrder> results = new ArrayList<ItemSearchOrder>();
-    // for (int i = 0; i < split.length; i++) {
-    // final String[] orderSplit = split[i].split("\\s");
-    // results.add(new ItemSearchOrder(orderSplit[0], orderSplit.length == 1 || orderSplit[1].equalsIgnoreCase("asc")));
-    // }
-    //
-    // return results;
-    // }
 
     /**
      * Read the inputStream and parse it as an IItem compatible with the called API.
@@ -301,7 +282,6 @@ public class APIServletCall extends ServletCall {
             final String[] split = parameter.split("=");
             if (split.length < 2) {
                 results.put(split[0], null);
-                // throw new APIMalformedUrlException("Malformed filter parameter : " + parameter);
             } else {
                 results.put(split[0], split[1]);
             }
