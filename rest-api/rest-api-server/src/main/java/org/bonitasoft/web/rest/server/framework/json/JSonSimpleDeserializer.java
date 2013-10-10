@@ -34,13 +34,13 @@ import org.json.simple.parser.ParseException;
  * @author Séverin Moussel
  * 
  */
-public class JSonSimpleUnserializer implements JSonUnserializer {
+public class JSonSimpleDeserializer implements JSonUnserializer {
 
-    private static JSonSimpleUnserializer INSTANCE = null;
+    private static JSonSimpleDeserializer INSTANCE = null;
 
-    private static JSonSimpleUnserializer getInstance() {
+    private static JSonSimpleDeserializer getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new JSonSimpleUnserializer();
+            INSTANCE = new JSonSimpleDeserializer();
         }
         return INSTANCE;
     }

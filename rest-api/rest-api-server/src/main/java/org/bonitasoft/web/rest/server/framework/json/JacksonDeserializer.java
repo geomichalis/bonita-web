@@ -19,37 +19,37 @@ package org.bonitasoft.web.rest.server.framework.json;
 
 import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.util.List;
 
+import org.bonitasoft.web.rest.server.datastore.bpm.flownode.Variable;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
-import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class JacksonUnserializer {
+public class JacksonDeserializer {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    public Serializable unserialize(String json, String className) {
-        Class<?> clazz = getClass(className);
-        return unserialize(json, clazz);
-    }
-
-    private Class<?> getClass(String className) {
+    public <T> T deserialize(String json, Class<T> clazz) {
         try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new APIException(_("%className% not found. Only jdk types are supported", new Arg("className", className)));
+            return mapper.readValue(json.getBytes(), clazz);
+        } catch (JsonParseException e) {
+            throw new APIException(_("Can't parse json, non-well formed content"), e);
+        } catch (JsonMappingException e) {
+            throw new APIException(_("Json can't be mapped to " + clazz.getName()), e);
+        } catch (IOException e) {
+            // should never appear
+            throw new APIException(e);
         }
     }
-
-    private Serializable unserialize(String json, Class<?> clazz) {
+    
+    public <T> List<T> deserializeList(String json, Class<T> clazz) {
         try {
-            return (Serializable) mapper.readValue(json.getBytes(), clazz);
-        } catch (ClassCastException e) {
-            throw new APIException(_("%className% is not serializable", new Arg("className", clazz.getName())));
+            return mapper.readValue(json.getBytes() , mapper.getTypeFactory().constructCollectionType(List.class, clazz));
         } catch (Exception e) {
-            throw new APIException(_("Unable to unserialize %json% in %className%", new Arg("json", json),
-                    new Arg("className", clazz.getName())), e);
+            throw new APIException(e);
         }
     }
 }

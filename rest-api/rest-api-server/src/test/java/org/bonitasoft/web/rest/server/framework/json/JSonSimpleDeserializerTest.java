@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import org.bonitasoft.web.rest.server.framework.json.JSonSimpleUnserializer;
+import org.bonitasoft.web.rest.server.framework.json.JSonSimpleDeserializer;
 import org.bonitasoft.web.toolkit.client.common.AbstractTreeNode;
 import org.bonitasoft.web.toolkit.client.common.Tree;
 import org.bonitasoft.web.toolkit.client.common.TreeIndexed;
@@ -31,12 +31,12 @@ import org.junit.Test;
  * @author Séverin Moussel
  * 
  */
-public class JSonSimpleUnserializerTest {
+public class JSonSimpleDeserializerTest {
 
     @Test
     public void testMalformedJson() {
         try {
-            JSonSimpleUnserializer.unserializeTree("[toto}");
+            JSonSimpleDeserializer.unserializeTree("[toto}");
         } catch (final Exception e) {
             return;
         }
@@ -45,14 +45,14 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testEmptyInput() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("");
 
         assertNull(tree);
     }
 
     @Test
     public void testSimpleObject() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("{\"name\":\"toto\",\"path\":\"titi\"}");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("{\"name\":\"toto\",\"path\":\"titi\"}");
 
         if (!(tree instanceof TreeIndexed<?>)) {
             fail("Fail to parse a simple object in JSON");
@@ -66,7 +66,7 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testEmptyObject() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("{}");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("{}");
 
         if (!(tree instanceof TreeIndexed<?>)) {
             fail("Fail to parse a simple object in JSON");
@@ -77,7 +77,7 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testSimpleArray() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree(" [\"name\",5,true]");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree(" [\"name\",5,true]");
 
         if (!(tree instanceof Tree<?>)) {
             fail("Fail to parse a simple array in JSON");
@@ -96,7 +96,7 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testEmptyArray() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("[]");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("[]");
 
         if (!(tree instanceof Tree<?>)) {
             fail("Fail to parse a simple array in JSON");
@@ -107,7 +107,7 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testOneElementArray() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("[101]");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("[101]");
 
         if (!(tree instanceof Tree<?>)) {
             fail("Fail to parse a simple array in JSON");
@@ -122,7 +122,7 @@ public class JSonSimpleUnserializerTest {
 
     @Test
     public void testObjectWithArray() {
-        final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree("{\"name\":\"toto\",\"categories_id\":[1,2,5]}");
+        final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree("{\"name\":\"toto\",\"categories_id\":[1,2,5]}");
 
         if (!(tree instanceof TreeIndexed<?>)) {
             fail("Fail to parse a compound object in JSON");

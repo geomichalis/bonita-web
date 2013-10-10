@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.bonitasoft.web.rest.server.framework.exception.APIMissingIdException;
-import org.bonitasoft.web.rest.server.framework.json.JSonSimpleUnserializer;
+import org.bonitasoft.web.rest.server.framework.json.JSonSimpleDeserializer;
 import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.toolkit.client.common.AbstractTreeNode;
 import org.bonitasoft.web.toolkit.client.common.Tree;
@@ -236,7 +236,7 @@ public class APIServletCall extends ServletCall {
                 }
 
                 // Parsing ids in Json input stream
-                final AbstractTreeNode<String> tree = JSonSimpleUnserializer.unserializeTree(inputStream);
+                final AbstractTreeNode<String> tree = JSonSimpleDeserializer.unserializeTree(inputStream);
 
                 if (tree instanceof Tree<?>) {
                     final List<AbstractTreeNode<String>> nodes = ((Tree<String>) tree).getNodes();
