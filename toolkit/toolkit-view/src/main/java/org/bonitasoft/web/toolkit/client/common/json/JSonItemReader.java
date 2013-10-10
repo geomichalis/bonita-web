@@ -223,9 +223,9 @@ public class JSonItemReader {
                         )
                 
                       );
-            // json list - set directly string in attribute value
+            // json list - set directly json in attribute value
             } else if (entry.getValue() instanceof Tree<?>) {
-                item.setAttribute(entry.getKey(), entry.getValue().toString());
+                item.setAttribute(entry.getKey(), entry.getValue().toJson());
             }
         }
 
