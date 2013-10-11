@@ -16,12 +16,10 @@
  */
 package org.bonitasoft.web.rest.server.datastore.bpm.flownode;
 
-import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
+import static org.bonitasoft.web.toolkit.client.common.util.StringUtil.isBlank;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.data.DataInstance;
@@ -36,18 +34,17 @@ import org.bonitasoft.web.rest.model.bpm.flownode.ActivityDefinition;
 import org.bonitasoft.web.rest.model.bpm.flownode.ActivityItem;
 import org.bonitasoft.web.rest.model.bpm.flownode.FlowNodeItem;
 import org.bonitasoft.web.rest.model.bpm.flownode.HumanTaskItem;
+import org.bonitasoft.web.rest.server.datastore.utils.VariableMapper;
+import org.bonitasoft.web.rest.server.datastore.utils.VariablesMapper;
 import org.bonitasoft.web.rest.server.engineclient.ActivityEngineClient;
 import org.bonitasoft.web.rest.server.engineclient.EngineAPIAccessor;
 import org.bonitasoft.web.rest.server.engineclient.EngineClientFactory;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasGet;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasUpdate;
-import org.bonitasoft.web.rest.server.framework.json.JacksonDeserializer;
 import org.bonitasoft.web.rest.server.framework.utils.SearchOptionsBuilderUtil;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIItemNotFoundException;
-import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
 import org.bonitasoft.web.toolkit.client.common.util.MapUtil;
-import org.bonitasoft.web.toolkit.client.common.util.StringUtil;
 import org.bonitasoft.web.toolkit.client.data.APIID;
 
 /**
@@ -123,9 +120,9 @@ public class AbstractActivityDatastore<CONSOLE_ITEM extends ActivityItem, ENGINE
 
     @Override
     public CONSOLE_ITEM update(final APIID id, final Map<String, String> attributes) {
-        String value = MapUtil.getValue(attributes, "variables", null);
-        if (value != null && !value.isEmpty()) {
-            updateActivityVariables(id, value);
+        String jsonVariables = MapUtil.getValue(attributes, ActivityItem.ATTRIBUTE_VARIABLES, null);
+        if (!isBlank(jsonVariables)) {
+            updateActivityVariables(id.toLong(), jsonVariables);
         }
 
         update(get(id), attributes);
@@ -139,34 +136,23 @@ public class AbstractActivityDatastore<CONSOLE_ITEM extends ActivityItem, ENGINE
         }
     }
 
-    private void updateActivityVariables(final APIID id, String value) {
-        ActivityEngineClient client = new EngineClientFactory(new EngineAPIAccessor()).createActivityEngineClient(getEngineSession());
-        HashMap<String, Serializable> map = new HashMap<String, Serializable>();
-        List<Variable> list = new JacksonDeserializer().deserializeList(value, Variable.class);
-        for (Variable variable : list) {
-            String name = variable.getName();
-            if (StringUtil.isBlank(name)) {
-                throw new APIException("Message to be done");
-            }
-            DataInstance activityDataInstance = client.getDataInstance(name, id.toLong());
-            Serializable serializable = getSerializableValue(activityDataInstance.getClassName(), variable);
-            map.put(name, serializable);
-        }
-        client.updateVariables(id.toLong(), map);
+    private void updateActivityVariables(long activityId, String jsonValue) {
+        ActivityEngineClient activityEngineclient = getActivityEngineClient();
+        HashMap<String, Serializable> variables = buildVariablesMap(activityId, jsonValue, activityEngineclient);
+        activityEngineclient.updateVariables(activityId, variables);
     }
 
-    private Serializable getSerializableValue(String className, Variable variable) {
-        try {
-            Object deserialize = new JacksonDeserializer().convertValue(variable.getValue(), Class.forName(className));
-            if (deserialize instanceof Date) {
-                System.out.println(((Date) deserialize).getTime());
-            }
-            return (Serializable) deserialize;
-        } catch (ClassNotFoundException e) {
-            throw new APIException(_("%className% not found. Only jdk types are supported", new Arg("className", className)));
-        } catch (ClassCastException e) {
-            throw new APIException(_("%className% is not Serializable", new Arg("className", className)));
+    private ActivityEngineClient getActivityEngineClient() {
+        return new EngineClientFactory(new EngineAPIAccessor()).createActivityEngineClient(getEngineSession());
+    }
+
+    private HashMap<String, Serializable> buildVariablesMap(long activityId,  String jsonValue, ActivityEngineClient client) {
+        HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+        for (VariableMapper var : VariablesMapper.fromJson(jsonValue).getVariables()) {
+            DataInstance data = client.getDataInstance(var.getName(), activityId);
+            map.put(var.getName(), var.getSerializableValue(data.getClassName()));
         }
+        return map;
     }
 
     protected void update(final CONSOLE_ITEM item, final Map<String, String> attributes) {

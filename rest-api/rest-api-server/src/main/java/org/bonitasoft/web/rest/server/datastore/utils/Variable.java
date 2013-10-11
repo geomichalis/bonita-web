@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.web.rest.server.datastore.bpm.flownode;
+package org.bonitasoft.web.rest.server.datastore.utils;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonAnySetter;
 
-public class Variable implements Serializable {
+public class Variable {
 
     private Map<String, Object> all = new HashMap<String, Object>();
 
