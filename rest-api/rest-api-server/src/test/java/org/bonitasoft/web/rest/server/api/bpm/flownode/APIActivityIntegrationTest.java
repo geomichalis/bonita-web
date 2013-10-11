@@ -19,35 +19,37 @@ package org.bonitasoft.web.rest.server.api.bpm.flownode;
 
 import static org.bonitasoft.web.toolkit.client.data.APIID.makeAPIID;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
-import org.bonitasoft.engine.bpm.data.DataInstance;
-import org.bonitasoft.engine.bpm.data.DataNotFoundException;
+import org.bonitasoft.engine.bpm.flownode.ActivityInstanceNotFoundException;
+import org.bonitasoft.engine.bpm.flownode.ArchivedActivityInstance;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
-import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.ServerAPIException;
-import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.InvalidExpressionException;
-import org.bonitasoft.test.toolkit.bpm.TestCase;
-import org.bonitasoft.test.toolkit.bpm.TestCaseFactory;
 import org.bonitasoft.test.toolkit.bpm.TestHumanTask;
 import org.bonitasoft.test.toolkit.bpm.TestProcess;
-import org.bonitasoft.test.toolkit.bpm.TestProcessFactory;
 import org.bonitasoft.test.toolkit.organization.TestUser;
 import org.bonitasoft.test.toolkit.organization.TestUserFactory;
+import org.bonitasoft.web.rest.model.bpm.flownode.ActivityItem;
 import org.bonitasoft.web.rest.server.AbstractConsoleTest;
-import org.bonitasoft.web.rest.server.api.bpm.cases.APIArchivedComment;
-import org.bonitasoft.web.toolkit.client.data.APIID;
+import org.bonitasoft.web.rest.server.WaitUntil;
 import org.junit.Test;
 
 public class APIActivityIntegrationTest extends AbstractConsoleTest {
 
+    private static final String JSON_UPDATE_VARIABLES = "[" +
+                "{\"name\": \"variable1\", \"value\": \"newValue\"}," +
+                "{\"name\": \"variable2\", \"value\": 9}," +
+                "{\"name\": \"variable3\", \"value\": 349246800000}" +
+    		"]";
+    
     private APIActivity apiActivity;
 
     @Override
@@ -61,25 +63,11 @@ public class APIActivityIntegrationTest extends AbstractConsoleTest {
         return TestUserFactory.getJohnCarpenter();
     }   
     
-    @Test
-    public void api_can_update_activity_variables() throws Exception {
-        TestHumanTask activity = createActivityWithVariables();
-        
-        Map<String, String> attributes = new HashMap<String, String>();
-        String json = "[" +
-                    "{\"name\": \"variable1\", \"value\": \"newValue\"}" +
-        		"]";
-        attributes.put("variables", json);
-        
-        apiActivity.runUpdate(makeAPIID(activity.getId()), attributes);
-        
-        assertThat(activity.getDataInstance("variable1").getValue(), is((Serializable) "newValue"));
-    }
-
     /**
      * Variables :
      *  - variable1 : String
      *  - variable2 : Long
+     *  - variable3 : Date
      */
     private TestHumanTask createActivityWithVariables() throws InvalidExpressionException {
         ProcessDefinitionBuilder processDefinitionBuidler = new ProcessDefinitionBuilder().createNewInstance("processName", "1.0");
@@ -90,9 +78,71 @@ public class APIActivityIntegrationTest extends AbstractConsoleTest {
                 
                 .addData("variable1", String.class.getName(), new ExpressionBuilder().createConstantStringExpression("defaultValue"))
                 .addData("variable2", Long.class.getName(), new ExpressionBuilder().createConstantLongExpression(1))
+                .addData("variable3", Date.class.getName(), new ExpressionBuilder().createConstantDateExpression("428558400000"))
                 
                 .addEndEvent("Finish");
-        return new TestProcess(processDefinitionBuidler).addActor(getInitiator()).setEnable(true).startCase().getNextHumanTask();
+        return new TestProcess(processDefinitionBuidler).addActor(getInitiator()).setEnable(true).startCase().getNextHumanTask().assignTo(getInitiator());
     }
 
+    @Test
+    public void api_can_update_activity_variables() throws Exception {
+        TestHumanTask activity = createActivityWithVariables();
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put(ActivityItem.ATTRIBUTE_VARIABLES, JSON_UPDATE_VARIABLES);
+        
+        apiActivity.runUpdate(makeAPIID(activity.getId()), attributes);
+        
+        assertThat(activity.getDataInstance("variable1").getValue(), is((Serializable) "newValue"));
+        assertThat(activity.getDataInstance("variable2").getValue(), is((Serializable) 9L));
+        assertThat(activity.getDataInstance("variable3").getValue(), is((Serializable) new Date(349246800000L)));
+    }
+    
+    @Test
+    public void api_can_update_variables_and_terminate_activity() throws Exception {
+        TestHumanTask activity = createActivityWithVariables();
+        Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put(ActivityItem.ATTRIBUTE_VARIABLES, JSON_UPDATE_VARIABLES);
+        attributes.put(ActivityItem.ATTRIBUTE_STATE, ActivityItem.VALUE_STATE_COMPLETED);
+        
+        apiActivity.runUpdate(makeAPIID(activity.getId()), attributes);
+        
+        ArchivedActivityInstance archivedActivityInstance = getArchivedDataInstance(activity);
+        assertThat(archivedActivityInstance.getState(), is(ActivityItem.VALUE_STATE_COMPLETED));
+        
+        // Can't manage to do variable verification because of asynchronous engine update ...
+//        assertThat(getArchivedDataInstanceValue("variable1", archivedActivityInstance), is((Serializable) "newValue"));
+//        assertThat(getArchivedDataInstanceValue("variable2", archivedActivityInstance), is((Serializable) 9L));
+//        assertThat(getArchivedDataInstanceValue("variable3", archivedActivityInstance), is((Serializable) new Date(349246800000L)));
+    }
+
+    
+//    private Serializable getArchivedDataInstanceValue(String dataName, ArchivedActivityInstance archivedActivityInstance) throws Exception {
+//        return getProcessAPI().getArchivedActivityDataInstance(dataName, archivedActivityInstance.getSourceObjectId()).getValue();
+//    }
+
+    /**
+     * Activity state is updated asynchronously - need to wait... :-( 
+     */
+    private ArchivedActivityInstance getArchivedDataInstance(final TestHumanTask activity) throws Exception {
+        if (new WaitUntil(50, 3000) {
+            
+            @Override
+            protected boolean check() throws Exception {
+                try {
+                    ArchivedActivityInstance instance = getProcessAPI().getArchivedActivityInstance(activity.getId());
+                    return ActivityItem.VALUE_STATE_COMPLETED.equals(instance.getState());
+                } catch (ActivityInstanceNotFoundException e) {
+                    return false;
+                }
+            }
+        }.waitUntil()) {
+            return getProcessAPI().getArchivedActivityInstance(activity.getId());
+        } else {
+            throw new Exception("can't get archived task");
+        }
+    }
+
+    private ProcessAPI getProcessAPI() throws Exception {
+        return TenantAPIAccessor.getProcessAPI(getInitiator().getSession());
+    }
 }

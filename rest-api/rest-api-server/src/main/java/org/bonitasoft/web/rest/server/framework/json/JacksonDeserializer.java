@@ -28,6 +28,11 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
 
+/**
+ * Jackson ObjectMapper Wrapper to fit our needs
+ * 
+ * @author Colin PUY
+ */
 public class JacksonDeserializer {
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -51,5 +56,10 @@ public class JacksonDeserializer {
             // should never appear
             throw new APIException(e);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T> T convertValue(Object fromValue, Class<?> toValue) {
+        return (T) mapper.convertValue(fromValue, toValue);
     }
 }

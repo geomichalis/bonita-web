@@ -19,6 +19,7 @@ package org.bonitasoft.web.rest.server.datastore.bpm.flownode;
 import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +157,11 @@ public class AbstractActivityDatastore<CONSOLE_ITEM extends ActivityItem, ENGINE
 
     private Serializable getSerializableValue(String className, Variable variable) {
         try {
-            return (Serializable) Class.forName(className).cast(variable.getValue());
+            Object deserialize = new JacksonDeserializer().convertValue(variable.getValue(), Class.forName(className));
+            if (deserialize instanceof Date) {
+                System.out.println(((Date) deserialize).getTime());
+            }
+            return (Serializable) deserialize;
         } catch (ClassNotFoundException e) {
             throw new APIException(_("%className% not found. Only jdk types are supported", new Arg("className", className)));
         } catch (ClassCastException e) {
