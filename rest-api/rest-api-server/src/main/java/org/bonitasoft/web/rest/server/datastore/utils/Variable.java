@@ -22,20 +22,46 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonAnySetter;
 
+/**
+ * Variable - Used for variable Json deserialization
+ *  
+ * @author Colin PUY
+ */
 public class Variable {
 
-    private Map<String, Object> all = new HashMap<String, Object>();
+    private Map<String, Object> attributes = new HashMap<String, Object>();
 
     @JsonAnySetter
     public void set(String name, Object value) {
-        all.put(name, value);
+        attributes.put(name, value);
     }
 
     public String getName() {
-        return (String) all.get("name");
+        return (String) attributes.get("name");
     }
     
     public Object getValue() {
-        return all.get("value");
+        return attributes.get("value");
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        result = prime * result + ((getValue() == null) ? 0 : getValue().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Variable other = (Variable) obj;
+        return getName() != null && getName().equals(other.getName()) 
+                && getValue() != null && getValue().equals(other.getValue());
+    }
+    
+    
 }

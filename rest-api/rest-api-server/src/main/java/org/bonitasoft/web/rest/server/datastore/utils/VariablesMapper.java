@@ -23,24 +23,33 @@ import java.util.List;
 import org.bonitasoft.web.rest.server.framework.json.JacksonDeserializer;
 import org.bonitasoft.web.toolkit.client.common.util.StringUtil;
 
+/**
+ * Variables Mapper - Used for variables Json deserialization
+ *  
+ * @author Colin PUY
+ */
 public class VariablesMapper {
     
-    private static JacksonDeserializer jacksonDeserializer = new JacksonDeserializer();
     private List<VariableMapper> variables;
     
-    private VariablesMapper(List<VariableMapper> variables) {
-        this.variables = variables;
+    protected VariablesMapper(List<Variable> variables, JacksonDeserializer deserializer) {
+        this.variables = convertToMappers(variables, deserializer);
     }
     
     public static VariablesMapper fromJson(String json) {
-        List<Variable> list = jacksonDeserializer.deserializeList(json, Variable.class);
-        ArrayList<VariableMapper> list2 = new ArrayList<VariableMapper>();
+        JacksonDeserializer deserializer = new JacksonDeserializer();
+        List<Variable> variables = deserializer.deserializeList(json, Variable.class);
+        return new VariablesMapper(variables, deserializer);
+    }
+
+    private List<VariableMapper> convertToMappers(List<Variable> list, JacksonDeserializer deserializer) {
+        ArrayList<VariableMapper> mappers = new ArrayList<VariableMapper>();
         for (Variable variable : list) {
             if (!StringUtil.isBlank(variable.getName())) {
-                list2.add(new VariableMapper(variable));
+                mappers.add(new VariableMapper(variable, deserializer));
             }
         }
-        return new VariablesMapper(list2);
+        return mappers;
     }
 
     public List<VariableMapper> getVariables() {

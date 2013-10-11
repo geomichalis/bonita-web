@@ -25,18 +25,27 @@ import org.bonitasoft.web.rest.server.framework.json.JacksonDeserializer;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
 import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
 
+/**
+ * Variable Mapper - Used for variable Json deserialization
+ *  
+ * @author Colin PUY
+ */
 public class VariableMapper {
 
-    private JacksonDeserializer jacksonDeserializer = new JacksonDeserializer();
+    private JacksonDeserializer deserializer;
     private Variable variable;
 
-    public VariableMapper(Variable variable) {
+    public VariableMapper(Variable variable, JacksonDeserializer jacksonDeserializer) {
         this.variable = variable;
+        this.deserializer = jacksonDeserializer;
     }
     
     public Serializable getSerializableValue(String className) {
         try {
-            return (Serializable) jacksonDeserializer.convertValue(variable.getValue(), Class.forName(className));
+            return (Serializable) deserializer.convertValue(variable.getValue(), Class.forName(className));
+        } catch (IllegalArgumentException e) {
+            throw new APIException(_("%value% is not a valid value for %className%", new Arg("value", variable.getValue()), 
+                    new Arg("className", className)));
         } catch (ClassNotFoundException e) {
             throw new APIException(_("%className% not found. Only jdk types are supported", new Arg("className", className)));
         } catch (ClassCastException e) {
@@ -47,4 +56,24 @@ public class VariableMapper {
     public String getName() {
         return variable.getName();
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((variable == null) ? 0 : variable.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        VariableMapper other = (VariableMapper) obj;
+        return variable != null && variable.equals(other.variable);
+    }
+    
+    
 }
