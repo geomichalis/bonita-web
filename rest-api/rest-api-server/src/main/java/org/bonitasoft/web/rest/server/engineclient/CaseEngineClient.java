@@ -16,10 +16,27 @@
  */
 package org.bonitasoft.web.rest.server.engineclient;
 
+import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
+
+import java.io.Serializable;
+import java.util.Map;
+
 import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
+import org.bonitasoft.engine.bpm.process.ProcessInstance;
+import org.bonitasoft.engine.exception.AlreadyExistsException;
+import org.bonitasoft.engine.exception.CreationException;
+import org.bonitasoft.engine.identity.User;
+import org.bonitasoft.engine.identity.UserCreator;
+import org.bonitasoft.engine.identity.UserCreator.UserField;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
+import org.bonitasoft.web.toolkit.client.common.exception.api.APIForbiddenException;
+import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
+import org.bonitasoft.web.toolkit.client.data.APIID;
 
 /**
  * @author Colin PUY
@@ -32,6 +49,38 @@ public class CaseEngineClient {
 
     public CaseEngineClient(ProcessAPI processAPI) {
         this.processAPI = processAPI;
+    }
+    
+    public ProcessInstance create(APIID apiid) {
+        try {
+            return processAPI.startProcess(apiid.toLong());
+        } catch (ProcessDefinitionNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ProcessActivationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ProcessExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public ProcessInstance createWithVars(APIID apiid, Map<String, Serializable> vars) {
+        try {
+            return processAPI.startProcess(apiid.toLong(), vars);
+        } catch (ProcessDefinitionNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ProcessActivationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ProcessExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
     
     public long countOpenedCases() {

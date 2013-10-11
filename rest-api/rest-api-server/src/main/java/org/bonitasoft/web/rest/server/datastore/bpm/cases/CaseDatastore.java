@@ -63,7 +63,7 @@ public class CaseDatastore extends CommonDatastore<CaseItem, ProcessInstance> im
 
         return result;
     }
-
+    
     @Override
     public ItemSearchResult<CaseItem> search(final int page, final int resultsByPage, final String search, final String orders,
             final Map<String, String> filters) {
