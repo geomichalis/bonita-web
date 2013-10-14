@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.engine.bpm.data.DataDefinition;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
@@ -225,6 +226,14 @@ public class ProcessEngineClient {
             return processAPI.searchProcessDeploymentInfos(userId, searchOptions);
         } catch (final SearchException e) {
             throw new APIException("Error when searching process user can start", e);
+        }
+    }
+    
+    public List<DataDefinition> getProcessDataDefinitions(long processId) {
+        try {
+            return processAPI.getProcessDataDefinitions(processId, 0, Integer.MAX_VALUE);
+        } catch (ProcessDefinitionNotFoundException e) {
+            throw new APIException(_("Unable to get process data definitions, process %processId% not found", new Arg("processId", processId)));
         }
     }
 }
