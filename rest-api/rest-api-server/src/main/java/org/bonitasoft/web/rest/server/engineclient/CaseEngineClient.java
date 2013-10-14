@@ -26,17 +26,10 @@ import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
-import org.bonitasoft.engine.exception.AlreadyExistsException;
-import org.bonitasoft.engine.exception.CreationException;
-import org.bonitasoft.engine.identity.User;
-import org.bonitasoft.engine.identity.UserCreator;
-import org.bonitasoft.engine.identity.UserCreator.UserField;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
-import org.bonitasoft.web.toolkit.client.common.exception.api.APIForbiddenException;
 import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
-import org.bonitasoft.web.toolkit.client.data.APIID;
 
 /**
  * @author Colin PUY
@@ -51,36 +44,24 @@ public class CaseEngineClient {
         this.processAPI = processAPI;
     }
     
-    public ProcessInstance create(APIID apiid) {
-        try {
-            return processAPI.startProcess(apiid.toLong());
-        } catch (ProcessDefinitionNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ProcessActivationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ProcessExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+    public ProcessInstance start(long processId) {
+        return start(processId, null);
     }
     
-    public ProcessInstance createWithVars(APIID apiid, Map<String, Serializable> vars) {
+    public ProcessInstance start(long processId, Map<String, Serializable> variables) {
         try {
-            return processAPI.startProcess(apiid.toLong(), vars);
+            if (variables == null || variables.isEmpty()) {
+                return processAPI.startProcess(processId);
+            } else {
+                return processAPI.startProcess(processId, variables);
+            }
         } catch (ProcessDefinitionNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new APIException(_("Can't start process, process %processId% not found", new Arg("processId", processId)), e);
         } catch (ProcessActivationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new APIException(_("Can't start process, process %processId% is not enabled", new Arg("processId", processId)), e);
         } catch (ProcessExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new APIException(_("Error occured when starting process %processId%", new Arg("processId", processId)), e);
         }
-        return null;
     }
     
     public long countOpenedCases() {
