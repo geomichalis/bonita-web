@@ -131,7 +131,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Serializable getActivityFieldValue(final APISession session, final long activityInstanceID, final Expression expression, final Locale locale,
             final boolean isCurrentValue) throws BPMEngineException, InvalidSessionException, ExpressionEvaluationException {
 
-        return getActivityFieldValue(session, activityInstanceID, expression, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getActivityFieldValue(session, activityInstanceID, expression, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -155,7 +155,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Serializable getProcessFieldValue(final APISession session, final long processDefinitionID, final Expression expression, final Locale locale)
             throws BPMEngineException, InvalidSessionException {
 
-        return getProcessFieldValue(session, processDefinitionID, expression, locale, new HashMap<String, Serializable>());
+        return this.getProcessFieldValue(session, processDefinitionID, expression, locale, new HashMap<String, Serializable>());
     }
 
     /**
@@ -176,7 +176,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Serializable getInstanceFieldValue(final APISession session, final long processInstanceID, final Expression expression, final Locale locale,
             final boolean isCurrentValue) throws BPMEngineException, InvalidSessionException {
 
-        return getInstanceFieldValue(session, processInstanceID, expression, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getInstanceFieldValue(session, processInstanceID, expression, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -200,7 +200,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale, final boolean isCurrentValue) throws BPMEngineException,
             InvalidSessionException, FileTooBigException, IOException, ExpressionEvaluationException {
 
-        return getActivityFieldValue(session, activityInstanceID, expression, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getActivityFieldValue(session, activityInstanceID, expression, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -225,7 +225,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale) throws BPMEngineException, InvalidSessionException, FileTooBigException,
             IOException {
 
-        return getProcessFieldValue(session, processDefinitionID, expression, fieldValues, locale, new HashMap<String, Serializable>());
+        return this.getProcessFieldValue(session, processDefinitionID, expression, fieldValues, locale, new HashMap<String, Serializable>());
     }
 
     /**
@@ -248,7 +248,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale, final boolean isCurrentValue) throws BPMEngineException,
             InvalidSessionException, FileTooBigException, IOException {
 
-        return getInstanceFieldValue(session, processInstanceID, expression, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getInstanceFieldValue(session, processInstanceID, expression, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -800,7 +800,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
         boolean isInvolved = false;
         if (session.getUserId() == assigneeID) {
             isInvolved = true;
-        } else if (userProcessActors != null) {
+        } else if (assigneeID == 0L && userProcessActors != null) {
             final long processDefinitionID = getProcessDefinitionIDFromActivityInstanceID(session, activityInstanceID);
             final Set<Long> userActorIds = userProcessActors.get(processDefinitionID);
             isInvolved = userActorIds.contains(actorID);
@@ -829,7 +829,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale, final boolean isCurrentValue) throws BPMEngineException,
             InvalidSessionException, FileTooBigException, IOException {
 
-        return getActivityFieldsValues(session, activityInstanceID, expressions, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getActivityFieldsValues(session, activityInstanceID, expressions, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -851,7 +851,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Map<String, Serializable> getActivityFieldsValues(final APISession session, final long activityInstanceID, final List<Expression> expressions,
             final Locale locale, final boolean isCurrentValue) throws BPMEngineException, InvalidSessionException {
 
-        return getActivityFieldsValues(session, activityInstanceID, expressions, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getActivityFieldsValues(session, activityInstanceID, expressions, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -875,7 +875,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale, final boolean isCurrentValue) throws BPMEngineException,
             InvalidSessionException, FileTooBigException, IOException {
 
-        return getInstanceFieldsValues(session, processInstanceID, expressions, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getInstanceFieldsValues(session, processInstanceID, expressions, fieldValues, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -897,7 +897,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Map<String, Serializable> getInstanceFieldsValues(final APISession session, final long processInstanceID, final List<Expression> expressions,
             final Locale locale, final boolean isCurrentValue) throws BPMEngineException, InvalidSessionException {
 
-        return getInstanceFieldsValues(session, processInstanceID, expressions, locale, isCurrentValue, new HashMap<String, Serializable>());
+        return this.getInstanceFieldsValues(session, processInstanceID, expressions, locale, isCurrentValue, new HashMap<String, Serializable>());
     }
 
     /**
@@ -920,7 +920,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             final Map<String, FormFieldValue> fieldValues, final Locale locale) throws BPMEngineException, InvalidSessionException, FileTooBigException,
             IOException {
 
-        return getProcessFieldsValues(session, processDefinitionID, expressions, fieldValues, locale, new HashMap<String, Serializable>());
+        return this.getProcessFieldsValues(session, processDefinitionID, expressions, fieldValues, locale, new HashMap<String, Serializable>());
     }
 
     /**
@@ -941,7 +941,7 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
     public Map<String, Serializable> getProcessFieldsValues(final APISession session, final long processDefinitionID, final List<Expression> expressions,
             final Locale locale) throws BPMEngineException, InvalidSessionException {
 
-        return getProcessFieldsValues(session, processDefinitionID, expressions, locale, new HashMap<String, Serializable>());
+        return this.getProcessFieldsValues(session, processDefinitionID, expressions, locale, new HashMap<String, Serializable>());
     }
 
     /**
@@ -1053,7 +1053,8 @@ public class FormWorkflowAPIImpl implements IFormWorkflowAPI {
             BPMEngineException, ProcessDefinitionNotFoundException, ActivityInstanceNotFoundException {
         final ProcessAPI processAPI = bpmEngineAPIUtil.getProcessAPI(session);
         // TODO have an engine method to perform a single call
-        return ActivationState.ENABLED.equals(processAPI.getProcessDeploymentInfo(getProcessDefinitionIDFromActivityInstanceID(session, activityInstanceID))
+        return ActivationState.ENABLED.equals(processAPI.getProcessDeploymentInfo(
+                getProcessDefinitionIDFromActivityInstanceID(session, activityInstanceID))
                 .getActivationState());
     }
 
