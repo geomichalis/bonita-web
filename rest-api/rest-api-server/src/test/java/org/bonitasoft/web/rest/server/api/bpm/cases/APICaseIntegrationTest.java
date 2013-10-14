@@ -3,10 +3,10 @@ package org.bonitasoft.web.rest.server.api.bpm.cases;
 import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aDateVariable;
 import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aLongVariable;
 import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aStringVariable;
+import static org.bonitasoft.web.rest.model.builder.bpm.cases.CaseItemBuilder.aCaseItem;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,15 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.TenantAPIAccessor;
-import org.bonitasoft.engine.bpm.data.DataInstance;
-import org.bonitasoft.engine.bpm.data.DataNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceNotFoundException;
-import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
-import org.bonitasoft.engine.exception.ServerAPIException;
-import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.expression.ExpressionBuilder;
-import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.test.toolkit.bpm.ProcessVariable;
 import org.bonitasoft.test.toolkit.bpm.TestCase;
 import org.bonitasoft.test.toolkit.bpm.TestProcess;
@@ -33,7 +26,6 @@ import org.bonitasoft.test.toolkit.organization.TestUser;
 import org.bonitasoft.test.toolkit.organization.TestUserFactory;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseItem;
 import org.bonitasoft.web.rest.server.AbstractConsoleTest;
-import org.bonitasoft.web.rest.server.api.bpm.cases.APICase;
 import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.toolkit.client.data.APIID;
 import org.junit.Assert;
@@ -256,40 +248,35 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
     @Test
     public void we_can_start_a_case() throws Exception {
         TestProcess process = TestProcessFactory.getDefaultHumanTaskProcess().addActor(getInitiator()).setEnable(true);
-        CaseItem caseItem = new CaseItem();
-        caseItem.setProcessId(process.getId());
         
-        CaseItem item = apiCase.runAdd(caseItem);
+        CaseItem item = apiCase.runAdd(aCaseItem().withProcessId(process.getId()).build());
         
         ProcessInstance instance = getProcessInstance(item.getId());
         assertThat(instance.getProcessDefinitionId(), is(item.getProcessId().toLong()));
     }
     
-    private static final String JSON_UPDATE_VARIABLES = "[" +
-            "{\"name\": \"stringVariable\", \"value\": \"newValue\"}," +
-            "{\"name\": \"longVariable\", \"value\": 9}," +
-            "{\"name\": \"dateVariable\", \"value\": 349246800000}" +
-        "]";
-    
     @Test
     public void we_can_start_a_case_with_variables() throws Exception {
-        ProcessVariable stringVariable = aStringVariable("stringVariable", "firstValue");
-        ProcessVariable longVariable = aLongVariable("longVariable", 1L); 
-        ProcessVariable dateVariable = aDateVariable("dateVariable", "428558400000"); 
-        TestProcess processWithVariables = TestProcessFactory.createProcessWithVariables("processWithVariables", 
-                stringVariable, longVariable, dateVariable).addActor(getInitiator()).setEnable(true);
+        String jsonVariables = "[" +
+                "{\"name\": \"stringVariable\", \"value\": \"newValue\"}," +
+                "{\"name\": \"longVariable\", \"value\": 9}," +
+                "{\"name\": \"dateVariable\", \"value\": 349246800000}" +
+            "]";
+        TestProcess process = createProcessWithVariables(aStringVariable("stringVariable", "firstValue"), 
+                aLongVariable("longVariable", 1L), aDateVariable("dateVariable", "428558400000"));
         
-        CaseItem caseItem = new CaseItem();
-        caseItem.setProcessId(processWithVariables.getId());
-        caseItem.setAttribute(CaseItem.ATTRIBUTE_VARIABLES, JSON_UPDATE_VARIABLES);
-        
-        CaseItem item = apiCase.runAdd(caseItem);
+        CaseItem item = apiCase.runAdd(aCaseItem().withProcessId(process.getId()).withVariables(jsonVariables).build());
         
         ProcessInstance instance = getProcessInstance(item.getId());
         assertThat(instance.getProcessDefinitionId(), is(item.getProcessId().toLong()));
         assertThat((String) getProcessDataInstanceValue("stringVariable", instance.getId()), equalTo("newValue"));
         assertThat((Long) getProcessDataInstanceValue("longVariable", instance.getId()), equalTo(9L));
         assertThat((Date) getProcessDataInstanceValue("dateVariable", instance.getId()), equalTo(new Date(349246800000L)));
+    }
+
+    private TestProcess createProcessWithVariables(ProcessVariable... processVariables) throws Exception {
+        return TestProcessFactory.createProcessWithVariables("processWithVariables", processVariables)
+                .addActor(getInitiator()).setEnable(true);
     }
     
     private Serializable getProcessDataInstanceValue(String dataName, long processInstanceId) throws Exception {
