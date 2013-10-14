@@ -16,11 +16,17 @@
  */
 package org.bonitasoft.web.rest.server.datastore.bpm.cases;
 
+import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
+
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
+import org.bonitasoft.engine.bpm.data.DataDefinition;
+import org.bonitasoft.engine.bpm.data.DataInstance;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceSearchDescriptor;
@@ -29,9 +35,12 @@ import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseItem;
 import org.bonitasoft.web.rest.server.datastore.CommonDatastore;
+import org.bonitasoft.web.rest.server.datastore.utils.VariableMapper;
+import org.bonitasoft.web.rest.server.datastore.utils.VariablesMapper;
 import org.bonitasoft.web.rest.server.engineclient.CaseEngineClient;
 import org.bonitasoft.web.rest.server.engineclient.EngineAPIAccessor;
 import org.bonitasoft.web.rest.server.engineclient.EngineClientFactory;
+import org.bonitasoft.web.rest.server.engineclient.ProcessEngineClient;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasAdd;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasDelete;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasGet;
@@ -39,6 +48,8 @@ import org.bonitasoft.web.rest.server.framework.api.DatastoreHasSearch;
 import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.rest.server.framework.utils.SearchOptionsBuilderUtil;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
+import org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n;
+import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
 import org.bonitasoft.web.toolkit.client.common.util.MapUtil;
 import org.bonitasoft.web.toolkit.client.common.util.StringUtil;
 import org.bonitasoft.web.toolkit.client.data.APIID;
@@ -139,25 +150,45 @@ public class CaseDatastore extends CommonDatastore<CaseItem, ProcessInstance> im
     public CaseItem add(CaseItem caseItem) {
         // Add
         
+        CaseEngineClient caseEngineClient = createCaseEngineClient();
         String jsonVariables = caseItem.getAttributeValue(CaseItem.ATTRIBUTE_VARIABLES);
         if (!StringUtil.isBlank(jsonVariables)) {
-            // TODO if variables, start with variables else start without
+            HashMap<String, Serializable> map = buildVariablesMap(caseItem.getProcessId().toLong(), jsonVariables);
+            ProcessInstance processInstance = caseEngineClient.start(caseItem.getProcessId().toLong(), map);
+            return convertEngineToConsoleItem(processInstance);
+        } else {
+            ProcessInstance processInstance = caseEngineClient.start(caseItem.getProcessId().toLong());
+            return convertEngineToConsoleItem(processInstance);
         }
-        
-        CaseEngineClient caseEngineClient = createCaseEngineClient();
-        ProcessInstance processInstance = caseEngineClient.start(caseItem.getProcessId().toLong());
-        return convertEngineToConsoleItem(processInstance);
     }
     
-//  private HashMap<String, Serializable> buildVariablesMap(long activityId,  String jsonValue, CaseEngineClient client) {
-//      HashMap<String, Serializable> map = new HashMap<String, Serializable>();
-//      for (VariableMapper var : VariablesMapper.fromJson(jsonValue).getVariables()) {
-//          DataInstance data = client.getDataInstance(var.getName(), activityId);
-//          map.put(var.getName(), var.getSerializableValue(data.getClassName()));
-//      }
-//      return map;
-//  }
+    private HashMap<String, Serializable> buildVariablesMap(long processId, String jsonValue) {
+        ProcessEngineClient processEngineClient = createProcessEngineClient();
+        List<DataDefinition> dataDefinitions = processEngineClient.getProcessDataDefinitions(processId);
+        
+        HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+        for (VariableMapper var : VariablesMapper.fromJson(jsonValue).getVariables()) {
+            DataDefinition data = getDataDefinitionByName(var.getName(), dataDefinitions, processId);
+            map.put(var.getName(), var.getSerializableValue(data.getClassName()));
+        }
+        return map;
+    }
+    
+    private DataDefinition getDataDefinitionByName(String dataName, List<DataDefinition> dataDefinitions, long processId) {
+        for (DataDefinition dataDefinition : dataDefinitions) {
+            if (dataDefinition.getName().equals(dataName)) {
+                return dataDefinition;
+            }
+        }
+        throw new APIException(_("Data definition %dataName% doesn't exists for process %processId%", 
+                new Arg("dataName", dataName), new Arg("processId", processId)));
+    }
+  
     private CaseEngineClient createCaseEngineClient() {
         return new EngineClientFactory(new EngineAPIAccessor()).createCaseEngineClient(getEngineSession());
+    }
+    
+    private ProcessEngineClient createProcessEngineClient() {
+        return new EngineClientFactory(new EngineAPIAccessor()).createProcessEngineClient(getEngineSession());
     }
 }

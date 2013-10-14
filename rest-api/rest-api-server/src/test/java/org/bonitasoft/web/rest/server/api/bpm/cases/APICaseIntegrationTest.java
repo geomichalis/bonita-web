@@ -1,20 +1,31 @@
 package org.bonitasoft.web.rest.server.api.bpm.cases;
 
+import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aDateVariable;
+import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aLongVariable;
+import static org.bonitasoft.test.toolkit.bpm.ProcessVariable.aStringVariable;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.TenantAPIAccessor;
+import org.bonitasoft.engine.bpm.data.DataInstance;
+import org.bonitasoft.engine.bpm.data.DataNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceNotFoundException;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.expression.ExpressionBuilder;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
+import org.bonitasoft.test.toolkit.bpm.ProcessVariable;
 import org.bonitasoft.test.toolkit.bpm.TestCase;
 import org.bonitasoft.test.toolkit.bpm.TestProcess;
 import org.bonitasoft.test.toolkit.bpm.TestProcessFactory;
@@ -49,6 +60,14 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // GET
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private ProcessInstance getProcessInstance(APIID caseId) throws Exception {
+        try {
+            return TenantAPIAccessor.getProcessAPI(getInitiator().getSession()).getProcessInstance(caseId.toLong());
+        } catch (ProcessInstanceNotFoundException e) {
+            return null;
+        }
+    }
 
     private void assertEquals(final String message, final ProcessInstance engineItem, final CaseItem consoleItem) {
 
@@ -245,12 +264,35 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         ProcessInstance instance = getProcessInstance(item.getId());
         assertThat(instance.getProcessDefinitionId(), is(item.getProcessId().toLong()));
     }
-
-    private ProcessInstance getProcessInstance(APIID caseId) throws Exception {
-        try {
-            return TenantAPIAccessor.getProcessAPI(getInitiator().getSession()).getProcessInstance(caseId.toLong());
-        } catch (ProcessInstanceNotFoundException e) {
-            return null;
-        }
+    
+    private static final String JSON_UPDATE_VARIABLES = "[" +
+            "{\"name\": \"stringVariable\", \"value\": \"newValue\"}," +
+            "{\"name\": \"longVariable\", \"value\": 9}," +
+            "{\"name\": \"dateVariable\", \"value\": 349246800000}" +
+        "]";
+    
+    @Test
+    public void we_can_start_a_case_with_variables() throws Exception {
+        ProcessVariable stringVariable = aStringVariable("stringVariable", "firstValue");
+        ProcessVariable longVariable = aLongVariable("longVariable", 1L); 
+        ProcessVariable dateVariable = aDateVariable("dateVariable", "428558400000"); 
+        TestProcess processWithVariables = TestProcessFactory.createProcessWithVariables("processWithVariables", 
+                stringVariable, longVariable, dateVariable).addActor(getInitiator()).setEnable(true);
+        
+        CaseItem caseItem = new CaseItem();
+        caseItem.setProcessId(processWithVariables.getId());
+        caseItem.setAttribute(CaseItem.ATTRIBUTE_VARIABLES, JSON_UPDATE_VARIABLES);
+        
+        CaseItem item = apiCase.runAdd(caseItem);
+        
+        ProcessInstance instance = getProcessInstance(item.getId());
+        assertThat(instance.getProcessDefinitionId(), is(item.getProcessId().toLong()));
+        assertThat((String) getProcessDataInstanceValue("stringVariable", instance.getId()), equalTo("newValue"));
+        assertThat((Long) getProcessDataInstanceValue("longVariable", instance.getId()), equalTo(9L));
+        assertThat((Date) getProcessDataInstanceValue("dateVariable", instance.getId()), equalTo(new Date(349246800000L)));
+    }
+    
+    private Serializable getProcessDataInstanceValue(String dataName, long processInstanceId) throws Exception {
+        return TenantAPIAccessor.getProcessAPI(getInitiator().getSession()).getProcessDataInstance(dataName, processInstanceId).getValue();
     }
 }
