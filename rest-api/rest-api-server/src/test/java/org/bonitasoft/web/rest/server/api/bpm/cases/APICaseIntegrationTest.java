@@ -1,11 +1,20 @@
 package org.bonitasoft.web.rest.server.api.bpm.cases;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
+import org.bonitasoft.engine.bpm.process.ProcessInstanceNotFoundException;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.test.toolkit.bpm.TestCase;
 import org.bonitasoft.test.toolkit.bpm.TestProcess;
 import org.bonitasoft.test.toolkit.bpm.TestProcessFactory;
@@ -24,8 +33,12 @@ import org.junit.Test;
  */
 public class APICaseIntegrationTest extends AbstractConsoleTest {
 
+    private APICase apiCase;
+
     @Override
     public void consoleTestSetUp() throws Exception {
+        apiCase = new APICase();
+        apiCase.setCaller(getAPICaller(getInitiator().getSession(), "API/bpm/case"));
     }
 
     @Override
@@ -54,19 +67,10 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
                 .addActor(getInitiator())
                 .startCase();
 
-        final CaseItem caseItem = getAPICase().runGet(APIID.makeAPIID(testCase.getId()), new ArrayList<String>(), new ArrayList<String>());
+        final CaseItem caseItem = apiCase.runGet(APIID.makeAPIID(testCase.getId()), new ArrayList<String>(), new ArrayList<String>());
 
         Assert.assertNotNull("Case not found", caseItem);
         assertEquals("Wrong case found", testCase.getProcessInstance(), caseItem);
-    }
-
-    /**
-     * @return
-     */
-    private APICase getAPICase() {
-        final APICase apiCase = new APICase();
-        apiCase.setCaller(getAPICaller(getInitiator().getSession(), "API/bpm/case"));
-        return apiCase;
     }
 
     @Test
@@ -74,7 +78,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final TestProcess testProcess = TestProcessFactory.getDefaultHumanTaskProcess().addActor(getInitiator());
         final TestCase testCase = testProcess.startCase();
 
-        final CaseItem caseItem = getAPICase().runGet(APIID.makeAPIID(testCase.getId()),
+        final CaseItem caseItem = apiCase.runGet(APIID.makeAPIID(testCase.getId()),
                 Arrays.asList(CaseItem.ATTRIBUTE_PROCESS_ID, CaseItem.ATTRIBUTE_STARTED_BY_USER_ID), new ArrayList<String>());
 
         Assert.assertNotNull("Failed to deploy process", caseItem.getProcess());
@@ -119,7 +123,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final Map<String, String> filters = new HashMap<String, String>();
         filters.put(CaseItem.ATTRIBUTE_STARTED_BY_USER_ID, String.valueOf(getInitiator().getId()));
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 10, null, null, filters, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 10, null, null, filters, null, null);
 
         checkSearchResults(caseItems, 10, 14);
     }
@@ -135,7 +139,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final Map<String, String> filters = new HashMap<String, String>();
         filters.put(CaseItem.FILTER_USER_ID, String.valueOf(getInitiator().getId()));
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 10, null, null, filters, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 10, null, null, filters, null, null);
 
         checkSearchResults(caseItems, 10, 14);
     }
@@ -156,7 +160,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final Map<String, String> filters = new HashMap<String, String>();
         filters.put(CaseItem.ATTRIBUTE_PROCESS_ID, String.valueOf(testProcess3.getId()));
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 3, null, null, filters, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 3, null, null, filters, null, null);
 
         checkSearchResults(caseItems, 3, 5);
 
@@ -170,7 +174,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
 
         initCasesForSearch();
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 10, null, null, null, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 10, null, null, null, null, null);
 
         // On more process (testProcess3)
         checkSearchResults(caseItems, 10, 15);
@@ -193,7 +197,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final Map<String, String> filters = new HashMap<String, String>();
         filters.put(CaseItem.FILTER_SUPERVISOR_ID, String.valueOf(TestUserFactory.getRidleyScott().getId()));
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 10, null, null, filters, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 10, null, null, filters, null, null);
 
         checkSearchResults(caseItems, 10, 5);
     }
@@ -217,7 +221,7 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         final Map<String, String> filters = new HashMap<String, String>();
         filters.put(CaseItem.FILTER_TEAM_MANAGER_ID, String.valueOf(TestUserFactory.getTeamManagerUser().getId()));
 
-        final ItemSearchResult<CaseItem> caseItems = getAPICase().runSearch(0, 100, null, null, filters, null, null);
+        final ItemSearchResult<CaseItem> caseItems = apiCase.runSearch(0, 100, null, null, filters, null, null);
         checkSearchResults(caseItems, 100, 25);
     }
 
@@ -228,5 +232,25 @@ public class APICaseIntegrationTest extends AbstractConsoleTest {
         Assert.assertTrue("Empty search results", caseItems.getLength() > 0);
         Assert.assertTrue("Wrong page size", caseItems.getLength() == nbResultsByPageExpected);
         Assert.assertTrue("Wrong Total size", caseItems.getTotal() == nbTotalResultsExpected);
+    }
+    
+    @Test
+    public void we_can_start_a_case() throws Exception {
+        TestProcess process = TestProcessFactory.getDefaultHumanTaskProcess().addActor(getInitiator()).setEnable(true);
+        CaseItem caseItem = new CaseItem();
+        caseItem.setProcessId(process.getId());
+        
+        CaseItem item = apiCase.runAdd(caseItem);
+        
+        ProcessInstance instance = getProcessInstance(item.getId());
+        assertThat(instance.getProcessDefinitionId(), is(item.getProcessId().toLong()));
+    }
+
+    private ProcessInstance getProcessInstance(APIID caseId) throws Exception {
+        try {
+            return TenantAPIAccessor.getProcessAPI(getInitiator().getSession()).getProcessInstance(caseId.toLong());
+        } catch (ProcessInstanceNotFoundException e) {
+            return null;
+        }
     }
 }

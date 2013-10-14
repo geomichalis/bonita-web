@@ -29,6 +29,10 @@ import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseItem;
 import org.bonitasoft.web.rest.server.datastore.CommonDatastore;
+import org.bonitasoft.web.rest.server.engineclient.CaseEngineClient;
+import org.bonitasoft.web.rest.server.engineclient.EngineAPIAccessor;
+import org.bonitasoft.web.rest.server.engineclient.EngineClientFactory;
+import org.bonitasoft.web.rest.server.framework.api.DatastoreHasAdd;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasDelete;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasGet;
 import org.bonitasoft.web.rest.server.framework.api.DatastoreHasSearch;
@@ -36,13 +40,14 @@ import org.bonitasoft.web.rest.server.framework.search.ItemSearchResult;
 import org.bonitasoft.web.rest.server.framework.utils.SearchOptionsBuilderUtil;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
 import org.bonitasoft.web.toolkit.client.common.util.MapUtil;
+import org.bonitasoft.web.toolkit.client.common.util.StringUtil;
 import org.bonitasoft.web.toolkit.client.data.APIID;
 
 /**
  * @author Séverin Moussel
  */
 public class CaseDatastore extends CommonDatastore<CaseItem, ProcessInstance> implements DatastoreHasGet<CaseItem>, DatastoreHasSearch<CaseItem>,
-        DatastoreHasDelete {
+        DatastoreHasDelete, DatastoreHasAdd<CaseItem> {
 
     public CaseDatastore(final APISession engineSession) {
         super(engineSession);
@@ -128,5 +133,31 @@ public class CaseDatastore extends CommonDatastore<CaseItem, ProcessInstance> im
         } catch (final Exception e) {
             throw new APIException(e);
         }
+    }
+
+    @Override
+    public CaseItem add(CaseItem caseItem) {
+        // Add
+        
+        String jsonVariables = caseItem.getAttributeValue(CaseItem.ATTRIBUTE_VARIABLES);
+        if (!StringUtil.isBlank(jsonVariables)) {
+            // TODO if variables, start with variables else start without
+        }
+        
+        CaseEngineClient caseEngineClient = createCaseEngineClient();
+        ProcessInstance processInstance = caseEngineClient.start(caseItem.getProcessId().toLong());
+        return convertEngineToConsoleItem(processInstance);
+    }
+    
+//  private HashMap<String, Serializable> buildVariablesMap(long activityId,  String jsonValue, CaseEngineClient client) {
+//      HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+//      for (VariableMapper var : VariablesMapper.fromJson(jsonValue).getVariables()) {
+//          DataInstance data = client.getDataInstance(var.getName(), activityId);
+//          map.put(var.getName(), var.getSerializableValue(data.getClassName()));
+//      }
+//      return map;
+//  }
+    private CaseEngineClient createCaseEngineClient() {
+        return new EngineClientFactory(new EngineAPIAccessor()).createCaseEngineClient(getEngineSession());
     }
 }

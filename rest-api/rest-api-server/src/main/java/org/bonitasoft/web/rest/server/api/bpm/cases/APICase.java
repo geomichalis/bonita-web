@@ -19,7 +19,6 @@ package org.bonitasoft.web.rest.server.api.bpm.cases;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.bpm.process.ProcessInstanceCriterion;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseDefinition;
 import org.bonitasoft.web.rest.model.bpm.cases.CaseItem;
@@ -27,8 +26,6 @@ import org.bonitasoft.web.rest.server.api.ConsoleAPI;
 import org.bonitasoft.web.rest.server.datastore.bpm.cases.CaseDatastore;
 import org.bonitasoft.web.rest.server.datastore.bpm.process.ProcessDatastore;
 import org.bonitasoft.web.rest.server.datastore.organization.UserDatastore;
-import org.bonitasoft.web.rest.server.engineclient.EngineAPIAccessor;
-import org.bonitasoft.web.rest.server.engineclient.EngineClientFactory;
 import org.bonitasoft.web.rest.server.framework.api.APIHasAdd;
 import org.bonitasoft.web.rest.server.framework.api.APIHasDelete;
 import org.bonitasoft.web.rest.server.framework.api.APIHasGet;
@@ -44,7 +41,6 @@ import org.bonitasoft.web.toolkit.client.data.item.ItemDefinition;
  */
 public class APICase extends ConsoleAPI<CaseItem> implements APIHasGet<CaseItem>, APIHasAdd<CaseItem>, APIHasSearch<CaseItem>, APIHasDelete {
     
-    private EngineClientFactory engineClientFactory;
     
     @Override
     protected ItemDefinition defineItemDefinition() {
@@ -52,13 +48,8 @@ public class APICase extends ConsoleAPI<CaseItem> implements APIHasGet<CaseItem>
     }
 
     @Override
-    public CaseItem add(final CaseItem item) {
-        
-        engineClientFactory = new EngineClientFactory(new EngineAPIAccessor());
-        // Add
-        ProcessInstance processInstance = engineClientFactory.createCaseEngineClient(getEngineSession()).create(item.getProcessId());
-        item.getAttributeValue("variables");
-        return new CaseItem();
+    public CaseItem add(final CaseItem caseItem) {
+        return new CaseDatastore(getEngineSession()).add(caseItem);
     }
     
     @Override
