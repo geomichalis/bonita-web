@@ -86,11 +86,6 @@ public class URLUtils {
     public static final String TODOLIST_PARAM = "todolist";
 
     /**
-     * archived : indicates if the required document is archived
-     */
-    public static final String ARCHIVED_PARAM = "archived";
-
-    /**
      * auto submit mode : indicates that the form should be automatically submitted
      */
     public static final String AUTO_SUBMIT_PARAM = "autoSubmit";
@@ -621,8 +616,8 @@ public class URLUtils {
         Cookies.setCookie(FORM_LOCALE_COOKIE_NAME, localeName, theExpirationTime);
     }
 
-    public String getAttachmentURL(final String servletURL, final String formID, final Map<String, Object> contextMap, final boolean isArchived,
-            final long documentId, final String fileName) {
+    public String getAttachmentURL(final String servletURL, final String formID, final Map<String, Object> contextMap, final long documentId,
+            final String fileName) {
         final StringBuilder urlParams = new StringBuilder();
         urlParams.append("?");
         final int size = contextMap.size();
@@ -643,7 +638,6 @@ public class URLUtils {
         } else {
             urlParams.append("&" + URLUtils.RESOURCE_FILE_NAME_PARAM + "=" + fileName);
         }
-        urlParams.append("&" + URLUtils.ARCHIVED_PARAM + "=" + isArchived);
         return servletURL + urlParams.toString();
     }
 
