@@ -25,6 +25,7 @@ import org.bonitasoft.console.client.model.bpm.flownode.HumanTaskDefinition;
 import org.bonitasoft.console.client.model.bpm.flownode.HumanTaskItem;
 import org.bonitasoft.console.client.user.task.model.TaskAPI;
 import org.bonitasoft.console.client.user.task.view.TasksListingPage;
+import org.bonitasoft.web.toolkit.client.ClientApplicationURL;
 import org.bonitasoft.web.toolkit.client.Session;
 import org.bonitasoft.web.toolkit.client.ViewController;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
@@ -102,17 +103,22 @@ public class PerformTaskPage extends PageOnItem<HumanTaskItem> {
     }
 
     private String buildTasksFormURL(final HumanTaskItem item) {
-        final StringBuilder frameURL = new StringBuilder()
+        final StringBuilder frameURL = new StringBuilder();
 
-                .append(GWT.getModuleBaseURL()).append("homepage")
+        frameURL.append(GWT.getModuleBaseURL()).append("homepage")
                 .append("?ui=form")
-
                 .append("&locale=")
-                .append(AbstractI18n.getDefaultLocale().toString())
+                .append(AbstractI18n.getDefaultLocale().toString());
 
-                .append("#form=")
-                .append(URL.decodeQueryString(item.getProcess().getName())).append(this.UUID_SEPERATOR)
-                .append(item.getProcess().getVersion()).append(this.UUID_SEPERATOR)
+        // if tenant is filled in portal url add tenant parameter to IFrame url
+        String tenantId = ClientApplicationURL.getTenantId();
+        if (!tenantId.isEmpty()) {
+            frameURL.append("&tenant=").append(tenantId);
+        }
+
+        frameURL.append("#form=")
+                .append(URL.decodeQueryString(item.getProcess().getName())).append(UUID_SEPERATOR)
+                .append(item.getProcess().getVersion()).append(UUID_SEPERATOR)
                 .append(URL.decodeQueryString(item.getName()))
 
                 .append("$entry")

@@ -16,6 +16,7 @@ import java.util.Map;
 import org.bonitasoft.console.client.model.bpm.cases.ArchivedCaseItem;
 import org.bonitasoft.console.client.model.bpm.cases.CaseItem;
 import org.bonitasoft.console.client.model.bpm.process.ProcessItem;
+import org.bonitasoft.web.toolkit.client.ClientApplicationURL;
 import org.bonitasoft.web.toolkit.client.Session;
 import org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n;
 import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
@@ -73,9 +74,25 @@ public class DisplayCaseFormPage extends Page {
         this.setTitle(_("Display a case form of app %app_name%", new Arg("app_name", decodedProcessName)));
 
         // TODO
-        final String frameURL = GWT.getModuleBaseURL() + "homepage?ui=form&locale=" + locale + "#form=" + processName + UUID_SEPERATOR + processVersion
-                + "$recap&mode=form&instance=" + caseId + "&recap=true";
-        addBody(new IFrame(frameURL, "100%", "700px"));
+        final StringBuilder frameURL = new StringBuilder();
+
+        frameURL.append(GWT.getModuleBaseURL())
+                .append("homepage?ui=form&locale=")
+                .append(locale);
+
+        // if tenant is filled in portal url add tenant parameter to IFrame url
+        String tenantId = ClientApplicationURL.getTenantId();
+        if (!tenantId.isEmpty()) {
+            frameURL.append("&tenant=").append(tenantId);
+        }
+
+        frameURL
+                .append("#form=")
+                .append(processName).append(UUID_SEPERATOR)
+                .append(processVersion)
+                .append("$recap&mode=form&instance=")
+                .append(caseId).append("&recap=true");
+        addBody(new IFrame(frameURL.toString(), "100%", "700px"));
     }
 
     public static final Map<String, String> getItemParams(final CaseItem item) {
