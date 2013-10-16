@@ -733,16 +733,6 @@ public class TestFormWorkflowAPIImpl extends FormsTestCase {
     }
 
     @Test
-    public void getTaskEditState_return_NOT_EDITABLE_if_task_is_performed_using_archived_task_ID() throws Exception {
-        final TestHumanTask task = TestProcessFactory.getDefaultHumanTaskProcess().addActor(getInitiator()).startCase().getNextHumanTask();
-        task.assignTo(getInitiator()).execute();
-
-        final ActivityEditState state = formWorkflowApi.getTaskEditState(getSession(), processAPI.getArchivedActivityInstance(task.getId()).getId());
-
-        assertThat(state, is(ActivityEditState.NOT_EDITABLE));
-    }
-
-    @Test
     public void testGetActivityAttributesActor() throws Exception {
         Assert.assertTrue("no pending user task instances are found", new WaitUntil(50, 1000) {
 
