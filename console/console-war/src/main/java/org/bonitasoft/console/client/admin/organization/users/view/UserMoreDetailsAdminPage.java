@@ -37,6 +37,7 @@ import org.bonitasoft.web.toolkit.client.ui.component.Clickable;
 import org.bonitasoft.web.toolkit.client.ui.component.Definition;
 import org.bonitasoft.web.toolkit.client.ui.component.Link;
 import org.bonitasoft.web.toolkit.client.ui.component.Section;
+import org.bonitasoft.web.toolkit.client.ui.component.Text;
 import org.bonitasoft.web.toolkit.client.ui.component.button.ButtonAction;
 import org.bonitasoft.web.toolkit.client.ui.component.button.ButtonBack;
 import org.bonitasoft.web.toolkit.client.ui.component.containers.ContainerStyled;
@@ -72,6 +73,16 @@ public class UserMoreDetailsAdminPage extends UserQuickDetailsAdminPage {
     }
 
     @Override
+    protected void defineTitle(final UserItem user) {
+        if (user.isEnabled()) {
+            setTitle(user.getTitle() + " " + user.getFirstName() + " " + user.getLastName());
+        } else {
+            setTitle(user.getTitle() + " " + user.getFirstName() + " " + user.getLastName(), 
+                    new Text("inactive").addClass("inactive-user").setTooltip(_("Inactive user")));
+        }
+    }
+    
+    @Override
     protected boolean isDescriptionBeforeMetadatas() {
         return false;
     }
@@ -89,9 +100,11 @@ public class UserMoreDetailsAdminPage extends UserQuickDetailsAdminPage {
     }
 
     @Override
-    protected void buildToolbar(final UserItem item) {
+    protected void buildToolbar(final UserItem user) {
         addToolbarLink(new ButtonBack());
-        addToolbarLink(newEditUserButton());
+        if (user.isEnabled()) {
+            addToolbarLink(newEditUserButton());
+        }
     }
 
     private Clickable newEditUserButton() {
@@ -110,15 +123,13 @@ public class UserMoreDetailsAdminPage extends UserQuickDetailsAdminPage {
         addBody(personalInformationSection(user.getPersonnalData()));
     }
 
-    private boolean deploySuccessed(UserItem user, String deploy) {
-        return user.getDeploy(deploy) != null;
-    }
-
     @Override
-    protected Section membershipSection(final UserItem item) {
+    protected Section membershipSection(final UserItem user) {
         final Section section = new Section(new JsId("membershipSection"), _("Membership"));
-        section.addBody(membershipTable(item));
-        section.addBody(addMembershipLink());
+        section.addBody(membershipTable(user));
+        if (user.isEnabled()) {
+            section.addBody(addMembershipLink());
+        }
         return section;
     }
 

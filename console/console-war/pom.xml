@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>console-parent</artifactId>
 		<groupId>org.bonitasoft.console</groupId>
-		<version>6.1.0-SNAPSHOT</version>
+		<version>6.1.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>console-war</artifactId>
@@ -12,8 +11,12 @@
 
 	<properties>
 		<permutations>All</permutations>
+
+		<!-- filtered in web.xml -->
 		<enable.engine.http.api.start>&lt;!--</enable.engine.http.api.start>
 		<enable.engine.http.api.end>--&gt;</enable.engine.http.api.end>
+		<enable.engine.listener.start>&lt;!--</enable.engine.listener.start>
+		<enable.engine.listener.end>--&gt;</enable.engine.listener.end>
 	</properties>
 
 	<dependencies>
@@ -125,11 +128,8 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<mkdir
-									dir="${project.build.directory}/${project.artifactId}-${project.version}" />
-								<echo
-									file="${project.build.directory}/${project.artifactId}-${project.version}/VERSION"
-									append="false">version : ${project.version}</echo>
+								<mkdir dir="${project.build.directory}/${project.artifactId}-${project.version}" />
+								<echo file="${project.build.directory}/${project.artifactId}-${project.version}/VERSION" append="false">version : ${project.version}</echo>
 							</tasks>
 						</configuration>
 					</execution>
@@ -141,16 +141,13 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<copy file="${project.build.directory}/forms-design/html/page.html"
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html" />
-								<copy
-									file="${project.build.directory}/forms-design/html/process.html"
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html" />
-								<copy file="${project.build.directory}/forms-design/html/error.html"
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html" />
-								<copy
-									file="${project.build.directory}/forms-design/html/confirm.html"
-									tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html" />
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_page_default.html" file="${project.build.directory}/forms-design/html/page.html" />
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_process_default.html" file="${project.build.directory}/forms-design/html/process.html" />
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_error.html" file="${project.build.directory}/forms-design/html/error.html" />
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes/html/bonita_default_confirm.html" file="${project.build.directory}/forms-design/html/confirm.html" />
+								<!--  copy htc  files for IE compatibility -->
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/css/PIE.htc" file="../../toolkit/toolkit-looknfeel/src/main/less/tools/PIE.htc" />
+								<copy tofile="${project.build.directory}/${project.artifactId}-${project.version}/css/boxsizing.htc" file="../../toolkit/toolkit-looknfeel/src/main/less/tools/boxsizing.htc" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -365,6 +362,9 @@
 				<bonita.home>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home>
 				<bonita.home.ref>../../bonita-home/target/bonita-home-${project.version}/bonita</bonita.home.ref>
 				<bonita.css>portal/css/bonita.css</bonita.css>
+				<!-- filtered in web.xml -->
+				<enable.engine.listener.start />
+				<enable.engine.listener.end />
 			</properties>
 			<build>
 				<plugins>

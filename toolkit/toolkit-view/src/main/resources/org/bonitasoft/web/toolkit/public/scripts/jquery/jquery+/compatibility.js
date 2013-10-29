@@ -46,12 +46,11 @@ $(function() {
 
 	// Problem corrected : IE6- doesn't understand the readonly attribute on a
 	// checkbox
-	$(':checkbox[readonly]').live('click', function() {
-		return false;
-	}).live('keypress', function() {
-		return false;
-	});
-	
+	$(':checkbox[readonly]')
+		.live('click', function() {
+			return false;
+		}).live('keypress', function() {
+			return false;
+		});
 
-	
 });

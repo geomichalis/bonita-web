@@ -89,6 +89,7 @@ form {
 		}
 		#uploader {
 			.bg (@form-input-file-bgImg , white , no-repeat , right , center , "");
+			//TODO .bgRight(@form-input-file-bgImg); to check if line below is not the good
 			padding-right: @form-input-file-padding;
 			height: @inputHeight;
 			a {
@@ -162,6 +163,7 @@ form {
 			label {
 				display: block;
 				position: absolute;
+				//TODO check position: relative;
 				left: 0;
 				top: 0;
 				margin: 0;
@@ -182,7 +184,7 @@ form {
 			input {
 				height: @form-input-checkbox-height - 4;
 				width: @form-input-checkbox-width - 4;
-				margin: 1px 0 0 1px;
+				margin: 2px 0 0 2px; 
 			}
 		}
 		&radio {

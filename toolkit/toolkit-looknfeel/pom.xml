@@ -1,20 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
 	<parent>
 		<artifactId>bos-web-toolkit</artifactId>
 		<groupId>org.bonitasoft.web.toolkit</groupId>
-		<version>6.1.0-SNAPSHOT</version>
+		<version>6.1.1-SNAPSHOT</version>
 	</parent>
-
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.bonitasoft.web.toolkit</groupId>
 	<artifactId>toolkit-looknfeel</artifactId>
 	<name>toolkit looknfeel</name>
 	<packaging>jar</packaging>
-
+	
 	<properties>
-		<wro4j.version>1.7.0</wro4j.version>
+		<wro4j.version>1.7.1</wro4j.version>
 		<output.directory>${project.build.directory}/${project.build.finalName}</output.directory>
 		<wro.config>${basedir}/src/main/wro/wro-build-time</wro.config>
+		<assembly.config>${basedir}/src/main/assembly.xml</assembly.config>
+		<assembly.path>assembly.xml</assembly.path>
 	</properties>
 
 	<dependencies>
@@ -65,7 +66,7 @@
                             </execution>
                         </executions>
 						<configuration>
-						    <contextFolder>src/main</contextFolder>
+							<contextFolder>src/main</contextFolder>
 							<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 							<extraConfigFile>${wro.config}/wro.properties</extraConfigFile>
 
@@ -81,10 +82,11 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.3</version>
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
-								<descriptor>assembly.xml</descriptor>
+								<descriptor>${assembly.path}</descriptor>
 							</descriptors>
 						</configuration>
 						<executions>

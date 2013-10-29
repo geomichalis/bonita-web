@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.commons.httpclient.HttpStatus;
 import org.bonitasoft.test.toolkit.api.json.AddToProfile;
 import org.bonitasoft.test.toolkit.api.json.CreateGroup;
@@ -24,8 +26,10 @@ import org.bonitasoft.test.toolkit.api.json.SetUserManager;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.ProxyFactory;
+import org.jboss.resteasy.client.core.executors.ApacheHttpClient4Executor;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.util.HttpResponseCodes;
@@ -43,6 +47,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("unchecked")
 public class APIHelper {
+
+    private String siteUrl;
 
     public static final long DEFAULT_TENANT_ID = 1;
 
@@ -64,6 +70,9 @@ public class APIHelper {
     /** API Client. */
     private final BonitaAPIClient client;
 
+    /** Client executor. */
+    private final ApacheHttpClient4Executor executor;
+
     /** Member type. */
     public enum MemberType {
         USER, GROUP, ROLE, ROLE_AND_GROUP
@@ -78,16 +87,18 @@ public class APIHelper {
      * Constructor.
      * 
      * @param pTenantId
-     * @param siteUrl
+     * @param pSiteUrl
      * @param pUserName
      * @param pPassword
      */
-    public APIHelper(final long pTenantId, final String siteUrl, final String pUserName, final String pPassword) {
+    public APIHelper(final long pTenantId, final String pSiteUrl, final String pUserName, final String pPassword) {
         this.logger = LoggerFactory.getLogger(APIHelper.class);
         this.logger.info("Login on tenant [{}] with user [{}]", pTenantId, pUserName);
 
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
-        this.client = ProxyFactory.create(BonitaAPIClient.class, siteUrl);
+        this.executor = new ApacheHttpClient4Executor();
+        setSiteUrl(pSiteUrl);
+        this.client = ProxyFactory.create(BonitaAPIClient.class, pSiteUrl, this.executor);
 
         final ClientResponse<String> res = this.client.login(String.valueOf(pTenantId), pUserName, pPassword);
         consumeResponse(res);
@@ -123,6 +134,18 @@ public class APIHelper {
      */
     public APIHelper(final String siteUrl, final long pTenantId) {
         this(pTenantId, siteUrl, TECHUSER_LOGIN, TECHUSER_PASSWORD);
+    }
+
+    /**
+     * Clean and set site URL.
+     * 
+     * @param pSiteUrl
+     */
+    private final void setSiteUrl(final String pSiteUrl) {
+        this.siteUrl = pSiteUrl;
+        if (!this.siteUrl.endsWith("/")) {
+            this.siteUrl = this.siteUrl + "/";
+        }
     }
 
     /**
@@ -196,6 +219,17 @@ public class APIHelper {
             this.logger.error(e.getMessage());
         }
         return items;
+    }
+
+    /**
+     * Make a search and return response.
+     * 
+     * @return JSONArray
+     */
+    public final APIResponse searchResponse(final String searchURL, final int pParam, final int cParam, final String oParam, final String fParam,
+            final String dParam, final String nParam) {
+        final ClientResponse<String> res = this.client.search(searchURL, pParam, cParam, oParam, fParam, dParam, nParam);
+        return consumeResponse(res);
     }
 
     /**
@@ -512,7 +546,7 @@ public class APIHelper {
      * @param pProcessName
      */
     public final APIResponse deleteAllProcesses(final String pProcessName) {
-        return deleteAllProcesses(pProcessName, null);
+        return this.deleteAllProcesses(pProcessName, null);
     }
 
     /**
@@ -915,7 +949,7 @@ public class APIHelper {
      * @param pResponse
      * @return APIResponse object
      */
-    protected APIResponse consumeResponse(final ClientResponse<String> pResponse) {
+    public APIResponse consumeResponse(final ClientResponse<String> pResponse) {
         final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         final StackTraceElement apiMethod = stackTraceElements[2];
         final Object[] loggerArgs = new String[5];
@@ -947,6 +981,45 @@ public class APIHelper {
     }
 
     /**
+     * Consume a client response (logging and connection release).
+     * 
+     * @param pResponse
+     * @return APIResponse object
+     */
+    public int getResponseCode(final ClientResponse<String> pResponse) {
+        final StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        final StackTraceElement apiMethod = stackTraceElements[2];
+        final Object[] loggerArgs = new String[5];
+        loggerArgs[0] = apiMethod.getMethodName();
+        loggerArgs[3] = apiMethod.getFileName();
+        loggerArgs[4] = String.valueOf(apiMethod.getLineNumber());
+
+        APIResponse apiResponse = new APIResponse();
+        final int status;
+        try {
+            final String entity = pResponse.getEntity(String.class);
+            status = pResponse.getStatus();
+            loggerArgs[1] = String.valueOf(status);
+            loggerArgs[2] = HttpStatus.getStatusText(status);
+            apiResponse = new APIResponse(entity, status);
+            this.logger.debug("Response {}", entity);
+            final String logPattern = "[{}] - {} {} ({}:{})";
+            if (isSuccessStatusCode(status)) {
+                this.logger.info(logPattern, loggerArgs);
+            } else {
+                this.logger.error(logPattern, loggerArgs);
+            }
+        } catch (final Exception e) {
+            this.logger.error(e.getMessage());
+        } finally {
+            if (pResponse != null) {
+                pResponse.releaseConnection();
+            }
+        }
+        return apiResponse.getStatus();
+    }
+
+    /**
      * Whether status code is successful (>= 200 && < 400).
      * 
      * @param pStatusCode
@@ -954,6 +1027,60 @@ public class APIHelper {
      */
     public static boolean isSuccessStatusCode(final int pStatusCode) {
         return pStatusCode >= HttpResponseCodes.SC_OK && pStatusCode < HttpResponseCodes.SC_BAD_REQUEST;
+    }
+
+    /*
+     * --------------------------------------------------
+     * GENERIC METHODS
+     * --------------------------------------------------
+     */
+
+    /**
+     * Send HTTP GET to a given resource given the resource path including query params.
+     * Can be used for generice search for example.
+     * 
+     * @param pResourcePathWithQueryParams
+     *            eg. "API/system/i18ntranslation?p=0&c=0&f=locale%3den"
+     * @return {@link APIResponse}
+     * @throws Exception
+     */
+    public final APIResponse httpGet(final String pResourcePathWithQueryParams) throws Exception {
+        final String uriTemplate = this.siteUrl + pResourcePathWithQueryParams;
+        final ClientRequest request = new ClientRequest(uriTemplate, this.executor);
+        final ClientResponse<String> response = request.get();
+        return consumeResponse(response);
+    }
+
+    /**
+     * Send HTTP POST to a given resource with body.
+     * 
+     * @param pResourcePath
+     * @param pRequestBody
+     * @return
+     * @throws Exception
+     */
+    public final APIResponse httpPost(final String pResourcePath, final Object pRequestBody) throws Exception {
+        final String uriTemplate = this.siteUrl + pResourcePath;
+        final ClientRequest request = new ClientRequest(uriTemplate, this.executor);
+        request.body(MediaType.APPLICATION_JSON_TYPE, pRequestBody.toString());
+        final ClientResponse<String> response = request.post();
+        return consumeResponse(response);
+    }
+
+    /**
+     * Send HTTP PUT to a given resource with body.
+     * 
+     * @param pResourcePath
+     * @param pRequestBody
+     * @return
+     * @throws Exception
+     */
+    public final APIResponse httpPut(final String pResourcePath, final Object pRequestBody) throws Exception {
+        final String uriTemplate = this.siteUrl + pResourcePath;
+        final ClientRequest request = new ClientRequest(uriTemplate, this.executor);
+        request.body(MediaType.APPLICATION_JSON_TYPE, pRequestBody.toString());
+        final ClientResponse<String> response = request.put();
+        return consumeResponse(response);
     }
 
 }

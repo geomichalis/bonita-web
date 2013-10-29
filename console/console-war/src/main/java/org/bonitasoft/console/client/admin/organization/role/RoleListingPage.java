@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bonitasoft.console.client.admin.process.view.ProcessListingAdminPage;
 import org.bonitasoft.web.rest.model.identity.RoleDefinition;
 import org.bonitasoft.web.rest.model.identity.RoleItem;
 import org.bonitasoft.web.toolkit.client.data.item.attribute.reader.ItemHasDualNameAttributeReader;
@@ -46,12 +47,13 @@ import org.bonitasoft.web.toolkit.client.ui.page.itemListingPage.ItemListingTabl
 public class RoleListingPage extends ItemListingPage<RoleItem> {
 
     public static final String TOKEN = "rolelistingadmin";
-
+    
     public static final List<String> PRIVILEGES = new ArrayList<String>();
-
+    
     static {
         PRIVILEGES.add(RoleListingPage.TOKEN);
     }
+
 
     private static final String TABLE_ALL_ROLES = "allroles";
 
@@ -68,7 +70,7 @@ public class RoleListingPage extends ItemListingPage<RoleItem> {
     }
 
     private Clickable addRoleLink() {
-        return new Link(_("Create a role"), _("Opens a popup to create a role"),
+        return new Link(_("Create a role"), _("Opens a popup to create a role"), 
                 new CheckValidSessionBeforeAction(new ActionShowPopup(new AddRolePage())));
     }
 

@@ -293,6 +293,10 @@ public abstract class ItemTableActionSet<T extends IItem> implements HasCounters
         this.itemTable = itemTable;
     }
 
+    public ItemTable getItemTable() {
+        return itemTable;
+    }
+
     public List<ItemTableAction> getActionsFor(final T item) {
         this.actions.clear();
         this.defaultAction = null;

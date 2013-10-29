@@ -16,12 +16,8 @@
  */
 package org.bonitasoft.console.client.common.view;
 
-import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 import org.bonitasoft.console.client.admin.bpm.cases.view.CaseListingAdminPage;
 import org.bonitasoft.console.client.admin.bpm.task.view.TaskListingAdminPage;
 import org.bonitasoft.console.client.admin.process.view.ProcessListingAdminPage;
@@ -31,6 +27,7 @@ import org.bonitasoft.console.client.user.task.model.TaskAPI;
 import org.bonitasoft.console.client.user.task.view.TasksListingPage;
 import org.bonitasoft.web.rest.model.bpm.flownode.HumanTaskDefinition;
 import org.bonitasoft.web.rest.model.bpm.flownode.HumanTaskItem;
+import org.bonitasoft.web.toolkit.client.ClientApplicationURL;
 import org.bonitasoft.web.toolkit.client.Session;
 import org.bonitasoft.web.toolkit.client.ViewController;
 import org.bonitasoft.web.toolkit.client.common.exception.api.APIException;
@@ -42,8 +39,11 @@ import org.bonitasoft.web.toolkit.client.ui.component.IFrame;
 import org.bonitasoft.web.toolkit.client.ui.page.ItemNotFoundPopup;
 import org.bonitasoft.web.toolkit.client.ui.page.PageOnItem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.bonitasoft.web.toolkit.client.common.i18n.AbstractI18n._;
 
 /**
  * @author Séverin Moussel
@@ -77,7 +77,7 @@ public class PerformTaskPage extends PageOnItem<HumanTaskItem> {
 
     public PerformTaskPage(final APIID taskId) {
         this();
-        addParameter(PARAMETER_ITEM_ID, taskId.toString());
+        this.addParameter(PARAMETER_ITEM_ID, taskId.toString());
     }
 
     @Override
@@ -93,18 +93,18 @@ public class PerformTaskPage extends PageOnItem<HumanTaskItem> {
     @Override
     public void buildView(final HumanTaskItem task) {
         if (task.getAssignedId() == null) {
-            TaskAPI.claim(task.getId(), getUserId(), new Action() {
+            TaskAPI.claim(task.getId(), this.getUserId(), new Action() {
 
                 @Override
                 public void execute() {
-                    addBody(createFormIframe(task));
+                    PerformTaskPage.this.addBody(PerformTaskPage.this.createFormIframe(task));
                 }
             });
-        } else if (!task.getAssignedId().equals(getUserId())) {
+        } else if (!task.getAssignedId().equals(this.getUserId())) {
             ViewController.showView(TasksListingPage.TOKEN);
             throw new APIException(_("You can't perform this task, it has already been assigned to someone else."));
         } else {
-            addBody(createFormIframe(task));
+            this.addBody(this.createFormIframe(task));
         }
     }
 
@@ -116,19 +116,22 @@ public class PerformTaskPage extends PageOnItem<HumanTaskItem> {
     }
 
     private IFrame createFormIframe(final HumanTaskItem item) {
-        return new IFrame(buildTasksFormURL(item), "100%", "700px");
+        return new IFrame("formframe", buildTasksFormURL(item), "100%", "700px");
     }
 
     private String buildTasksFormURL(final HumanTaskItem item) {
         final StringBuilder frameURL = new StringBuilder()
 
-                .append(GWT.getModuleBaseURL()).append("homepage")
-                .append("?ui=form")
+                .append(GWT.getModuleBaseURL()).append("homepage?ui=form&locale=")
+                .append(AbstractI18n.getDefaultLocale().toString());
 
-                .append("&locale=")
-                .append(AbstractI18n.getDefaultLocale().toString())
-                
-                .append("#form=")
+        // if tenant is filled in portal url add tenant parameter to IFrame url
+        final String tenantId = ClientApplicationURL.getTenantId();
+        if (tenantId != null && !tenantId.isEmpty()) {
+            frameURL.append("&tenant=").append(tenantId);
+        }
+
+        frameURL.append("#form=")
                 .append(URL.decodeQueryString(item.getProcess().getName())).append(this.UUID_SEPERATOR)
                 .append(item.getProcess().getVersion()).append(this.UUID_SEPERATOR)
                 .append(URL.decodeQueryString(item.getName()))
@@ -137,6 +140,7 @@ public class PerformTaskPage extends PageOnItem<HumanTaskItem> {
 
                 .append("&task=").append(item.getId())
                 .append("&mode=form");
+
         return frameURL.toString();
     }
 

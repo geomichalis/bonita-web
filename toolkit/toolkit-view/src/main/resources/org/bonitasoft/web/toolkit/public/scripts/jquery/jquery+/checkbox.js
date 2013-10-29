@@ -103,12 +103,12 @@ $(function(){
 	/*
 	 * Déclencheur des évenments 'check' et 'uncheck'
 	 */
-//	$(':checkbox, :radio').live('change.x', function(){
-//		var t = $(this),c=t.checked();
-//		if (c) {
-//			t.closest('form').find('input[type='+t.attr('type')+'][name='+t.attr('name')+']').not(t).trigger('uncheck');
-//		}
-//		t.trigger(c ? 'check' : 'uncheck');
-//	});
+	$(':checkbox, :radio').live('change.x', function(){
+		var t = $(this),c=t.checked();
+		if (c) {
+			t.closest('form').find('input[type='+t.attr('type')+'][name='+t.attr('name')+']').not(t).trigger('uncheck');
+		}
+		t.trigger(c ? 'check' : 'uncheck');
+	});
 
 });

@@ -164,24 +164,23 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     public Table addColumn(final JsId jsid, final String label) {
-        return this.addColumn(jsid, label, null, false, true);
+        return this.addColumn(new TableColumn(this, jsid, label, null, false, true));
     }
 
     public Table addColumn(final JsId jsid, final String label, final String sortName) {
-        return this.addColumn(jsid, label, sortName, true, true);
-    }
-
-    public Table addColumn(final JsId jsid, final String label, final String sortName, final boolean sorted) {
-        return this.addColumn(jsid, label, sortName, sorted, true);
+        return this.addColumn(new TableColumn(this, jsid, label, sortName, true, true));
     }
 
     public Table addColumn(final JsId jsid, final String label, final String sortName, final boolean sorted, final boolean sortAscending) {
-        this.columns.append(new TableColumn(this, jsid, label, sortName, sorted, sortAscending));
+        return addColumn(new TableColumn(this, jsid, label, sortName, sorted, sortAscending));
+    }
 
+    public Table addColumn(TableColumn column) {
+        this.columns.append(column);
+        String sortName = column.getSortName();
         if (sortName != null) {
-            this.order = sortName + (sortAscending ? " ASC" : " DESC");
+            this.order = sortName + (column.isSortAscending() ? " ASC" : " DESC");
         }
-
         return this;
     }
 
@@ -705,6 +704,7 @@ public class Table extends AbstractTable implements Refreshable {
      * @deprecated
      *             Create your own link and use {@link #addGroupedAction(Link, boolean)} instead
      */
+    @Deprecated
     public Table addGroupedAction(final JsId id, final String label, final String tooltip, final Action action, final boolean force) {
         addGroupedAction(new ButtonAction("btn-" + id.toString(), label, tooltip, action), force);
         return this;
@@ -1039,7 +1039,7 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     private void setCheckAllCheckboxesValue(GQuery checkbox, boolean value) {
-        setCheckboxesValue(checkbox, value, false);
+        setCheckboxesValue(checkbox, value, true);
         fireCssLabelEvent(tableElement);
     }
 

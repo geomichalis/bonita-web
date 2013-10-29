@@ -98,6 +98,11 @@ public class AutoCompleteEntry extends FormEntry {
         this.inputComponent.setValue(value);
     }
 
+    public AutoCompleteEntry addFilter(String filterName, String filterValue) {
+        inputComponent.addSearchFilter(filterName, filterValue);
+        return this;
+    }
+    
     @Override
     protected Element makeInput(final String uid2) {
         final Element div = DOM.createDiv();

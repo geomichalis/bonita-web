@@ -34,6 +34,15 @@ public interface BonitaAPIClient {
     /** Process. */
     String PROCESS_API_PATH = "API/bpm/process";
 
+    /** Case. */
+    String CASE_API_PATH = "API/bpm/case";
+
+    /** Activity. */
+    String ACTIVITY_API_PATH = "API/bpm/activity";
+
+    /** Human task. */
+    String HUMAN_TASK_API_PATH = "API/bpm/humanTask";
+
     /** Actor. */
     String ACTOR_API_PATH = "API/bpm/actor";
 
@@ -76,8 +85,7 @@ public interface BonitaAPIClient {
     @Path("{path}")
     @Produces("application/json")
     ClientResponse<String> search(@PathParam("path") String path, @QueryParam("p") int pParam, @QueryParam("c") int cParam, @QueryParam("o") String oParam,
-            @QueryParam("f") String fParam,
-            @QueryParam("d") String dParam, @QueryParam("n") String nParam);
+            @QueryParam("f") String fParam, @QueryParam("d") String dParam, @QueryParam("n") String nParam);
 
     /**
      * Get users.

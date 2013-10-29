@@ -78,7 +78,7 @@ public class UserDefinition extends ItemDefinition<UserItem> {
         createAttribute(UserItem.ATTRIBUTE_TITLE, ItemAttribute.TYPE.STRING);
         createAttribute(UserItem.ATTRIBUTE_JOB_TITLE, ItemAttribute.TYPE.STRING);
         createAttribute(UserItem.ATTRIBUTE_MANAGER_ID, ItemAttribute.TYPE.ITEM_ID);
-
+        createAttribute(UserItem.ATTRIBUTE_ENABLED, ItemAttribute.TYPE.BOOLEAN);
     }
 
     /*
@@ -101,5 +101,4 @@ public class UserDefinition extends ItemDefinition<UserItem> {
     public APICaller<UserItem> getAPICaller() {
         return new APICaller<UserItem>(this);
     }
-
 }

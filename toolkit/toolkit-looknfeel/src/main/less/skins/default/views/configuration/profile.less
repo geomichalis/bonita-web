@@ -58,7 +58,7 @@
 								background: @header-submenuCurrent-bgColor;
 								text-align: left;
 								&:hover{
-									cursor: move;
+									cursor: n-resize;
 								}
 								&_last{
 									.td{
@@ -90,21 +90,18 @@
 									padding: 0;
 									a {
 										margin: 0;
-										visibility: hidden;
-                                        display: inline-block;
-                                        width: @profileMoreDetails-deleteProfileEntryLink-width;
-                                        .height(@header-menu-height);
-                                        .hideText();
-                                        vertical-align: middle;
 										&.deleteProfileEntryLink{
+											visibility: hidden;
+											display: block;
+											width: @profileMoreDetails-deleteProfileEntryLink-width;
+											.hideText();
 											.bg(@profileMoreDetails-deleteProfileEntryLink-bg);
-										}
-										&.editProfileEntryLink{
-											.bg("pencil.png");
+											.height(@header-menu-height);
+											width: @profileMoreDetails-deleteProfileEntryLink-width;
 										}
 									}
 								}
-								&:hover > .td_actions a {
+								&:hover > .td_actions a.deleteProfileEntryLink {
 									visibility: visible;
 								}
 							}
@@ -114,7 +111,7 @@
 								text-align: @profileMoreDetails-menuEditor-folder-textAlign;
 								.height(@header-menu-height);
 								&:hover{
-									cursor: move;
+									cursor: e-resize;
 								}
 								> .td {
 									border: none;

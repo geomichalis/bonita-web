@@ -30,14 +30,6 @@ import org.bonitasoft.web.toolkit.client.data.item.template.ItemHasUniqueId;
  */
 public class UserItem extends Item implements ItemHasUniqueId, ItemHasLastUpdateDate, ItemHasCreator, ItemHasIcon {
 
-    public UserItem() {
-        super();
-    }
-
-    public UserItem(final IItem item) {
-        super(item);
-    }
-
     public static final String DEFAULT_USER_ICON = "/default/icon_user.png";
 
     public static final String ATTRIBUTE_FIRSTNAME = "firstname";
@@ -57,6 +49,16 @@ public class UserItem extends Item implements ItemHasUniqueId, ItemHasLastUpdate
     public static final String ATTRIBUTE_JOB_TITLE = "job_title";
 
     public static final String ATTRIBUTE_STATE = "user_state";
+
+    public static final String ATTRIBUTE_ENABLED = "enabled";
+
+    public UserItem() {
+        super();
+    }
+
+    public UserItem(final IItem item) {
+        super(item);
+    }
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ATTRIBUTES VALUES
@@ -148,14 +150,13 @@ public class UserItem extends Item implements ItemHasUniqueId, ItemHasLastUpdate
         return this.getAttributeValue(ATTRIBUTE_JOB_TITLE);
     }
 
-    //
-    // public AbstractContactDataItem getPersonnalData() {
-    // return this.getAttributeValue(ATTRIBUTE_PERSONNAL_DATA);
-    // }
-    //
-    // public AbstractContactDataItem getProfessionnalData() {
-    // return this.getAttributeValue(ATTRIBUTE_PROFESSIONAL_DATA);
-    // }
+    public boolean isEnabled() {
+        return "true".equals(getAttributeValue(ATTRIBUTE_ENABLED));
+    }
+
+    public void setEnabled(boolean enabled) {
+        setAttribute(ATTRIBUTE_ENABLED, String.valueOf(enabled));
+    }
 
     // SETTERS
 
@@ -287,7 +288,7 @@ public class UserItem extends Item implements ItemHasUniqueId, ItemHasLastUpdate
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public ItemDefinition getItemDefinition() {
+    public ItemDefinition<UserItem> getItemDefinition() {
         return new UserDefinition();
     }
 
