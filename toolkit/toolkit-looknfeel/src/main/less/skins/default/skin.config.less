@@ -109,7 +109,8 @@
 @inputPaddingLeft: 1*@w;
 @inputHeight: 35px;
 
-@button-action-subsection-size: 80%;
+@button-action-doublesection-size: 80%;
+@button-action-subsection-size : 70%;
 
 @body-padding-bottom: 5*@h;
 // ----------------------------------------------------------------------------
@@ -874,7 +875,7 @@
 @loginPage-form-input-innerShadowX: 0;
 @loginPage-form-input-innerShadowY: 0;
 @loginPage-form-input-innerShadowBlur: 4px;
-@loginPage-form-input-innerShadowColor: rgba(0,0,0, 0.3);//TODO replace shadow alpha by non alpha
+@loginPage-form-input-innerShadowColor:  #dfdede;
 
 @loginPage-form-input-password-bg: "login-input-password.png";
 @loginPage-form-input-username-bg: "login-input-username.png";
@@ -1124,3 +1125,11 @@
 @zIndex-header: @zIndex-max - 4;
 @zIndex-currentArrow:  @zIndex-max - 4;
 @zIndex-actionFilter: @zIndex-max - 3;
+
+// ----------------------------------------------------------------------------
+// Connector failure information
+// ----------------------------------------------------------------------------
+@information-bgImage: "information.png";
+@connector-failure-popup-width: 65%;
+@stackTrace-height: 500px;
+@stackTrace-bg-color: #eae4e4;
