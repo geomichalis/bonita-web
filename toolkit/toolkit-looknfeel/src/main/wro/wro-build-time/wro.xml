@@ -3,7 +3,4 @@
     <group name="bonita">
         <css>/less/main.less</css>
     </group>
-    <group name="login">
-        <css>/less/login.less</css>
-    </group>
 </groups>

@@ -867,6 +867,10 @@ public class Form extends AbstractForm {
         return this.addAutoCompleteEntry(jsid, label, tooltip, itemDefinition, labelTemplate, valueAttributeName, defaultValue, null);
     }
 
+    /**
+     *  @deprecated use addEntry(new {@link AutoCompleteEntry}(...)) 
+     */
+    @Deprecated
     public Form addAutoCompleteEntry(final JsId jsid, final String label, final String tooltip, final ItemDefinition itemDefinition,
             final AbstractAttributeReader labelTemplate, final String valueAttributeName, final String defaultValue, final String description) {
         AutoCompleteEntry entry = new AutoCompleteEntry(jsid, label, tooltip, itemDefinition, labelTemplate, valueAttributeName, description);
