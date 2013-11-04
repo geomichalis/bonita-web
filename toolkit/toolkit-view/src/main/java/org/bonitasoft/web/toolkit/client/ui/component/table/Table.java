@@ -596,7 +596,9 @@ public class Table extends AbstractTable implements Refreshable {
             labels.addClass("checked");
         }
         fireEvent(new ItemCheckedEvent(Table.this.selectedIds, itemId));
-        Table.this.selectedIds.add(itemId);
+        if (!Table.this.selectedIds.contains(itemId)) {
+            Table.this.selectedIds.add(itemId);
+        }
     }
 
     public HandlerRegistration addItemCheckedHandler(ItemCheckedHandler handler) {
@@ -899,13 +901,14 @@ public class Table extends AbstractTable implements Refreshable {
     }
 
     public String getSearch() {
-        GQuery gQuery = $(".tablefilters .tablefilter_search input", getElement());
 
-        if (gQuery.attr("class").contains("empty")) {
+        final String search = $(".tablefilters .tablefilter_search input[name=search]", getElement()).val();
+
+        if ("null".equalsIgnoreCase(search)) {
             return "";
         }
 
-        return gQuery.val();
+        return search;
 
     }
 
