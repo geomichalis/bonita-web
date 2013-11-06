@@ -17,21 +17,18 @@ form{
 					height: @inputHeight;
 				}
 			}
-			&.select .input, textarea, input, .uploader{
+			&.select .input, textarea, input{
 				.fontSize(@form-input-fontSize);
 				width: 100%;
 				padding: @inputPaddingTop @inputPaddingRight @inputPaddingBottom @inputPaddingLeft;
 				border: @form-input-border;
 				.boxSizing();
 				.borderRadius(@form-input-radius);
-				.boxShadow(@form-input-shadowX, @form-input-shadowY, @form-input-shadowBlur, @form-input-shadowColor);
+				.boxShadow(@form-input-shadowX, @form-input-shadowY, @form-input-shadowColor, @form-input-shadowColor);
 				position: relative;//CSS PIE for z-index: -1
 			}
 			input[type="password"]{
 				font-family: sans-serif !important;//IE fix when it is not a websafe font, password is displayed incorrectly
-			}
-			.uploader *{
-				position: static;
 			}
 			input[type="radio"], input[type="checkbox"]{
 				width: @form-input-radioCheckbox-width;
@@ -88,16 +85,25 @@ form{
 			}
 		}
 		.uploader{
-			.bg(@form-input-file-bgImg, white, no-repeat, right, center, "");
-			//TODO .bgRight(@form-input-file-bgImg); to check if line below is not the good
-			padding-right: @form-input-file-padding;
+			.bg(@form-input-file-bgImg, no-repeat, white, right, center, "");
+			padding: 0;
 			height: @inputHeight;
+			.borderRadius(@form-input-radius);
+			border: @form-input-border;
+			position: relative;
+			*{
+				border: none !important;
+			}
 			a{
+				.pointerAsLink();
+				.boxSizing();
+				line-height: @form-input-file-lineHeight;
+				padding: 0 @form-input-file-padding 0 @inputPaddingLeft;
+				border: none;
 				height: 100%;
 				display: block;
-				.pointerAsLink();
-				line-height: @form-input-file-lineHeight;
 				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 			&.done{
 				.bgRight(@form-input-fileOk-bgImg);
