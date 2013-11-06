@@ -217,8 +217,13 @@
 }
 .bgPie(@img, @options,@important:"!important"){
 	-pie-background: url("skins/@{skinpath}/images/@{img}") @options ;
+	.CSSPIE();
 }
-
+.bgAlphaColor(@c){
+	background-color: @c;
+	-pie-background:@c;
+	.CSSPIE();
+}
 
 .bgLeft(@img){
 	.bg(@img,no-repeat,transparent, left,center);

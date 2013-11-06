@@ -123,15 +123,16 @@
 				}
 			}
 			.tbody{
+				position: relative;//CSS pie zindex fix
 				.tr{
 					.pointerAsLink();
 					.borderRadiusLeft(@defaultRadius);
 					min-height: @tablesPanel-table-line-height;
 					padding-top: @tablesPanel-table-line-paddingTop;
 					padding-bottom: @tablesPanel-table-line-paddingBottom;
-					.boxShadow(@tablesPanel-table-line-shadowX, @tablesPanel-table-line-shadowY, @tablesPanel-table-line-shadowBlur, @tablesPanel-table-line-shadowColor);
-					background-color: @tablesPanel-table-line-gradientColor2;
-					margin: @tablesPanel-table-line-margin; 
+					//.boxShadow(@tablesPanel-table-line-shadowX, @tablesPanel-table-line-shadowY, @tablesPanel-table-line-shadowBlur, @tablesPanel-table-line-shadowColor);
+					margin: @tablesPanel-table-line-margin;
+					.bgAlphaColor(@tablesPanel-table-line-gradientColor1);
 					display: block;
 					float: left;
 					clear: both;
@@ -160,8 +161,7 @@
 						}
 					}
 					&.current{
-						.noIEGradient();
-						background: @tablesPanel-table-currentLine-background;
+						.bgAlphaColor(@tablesPanel-table-currentLine-background);
 						position: relative;
 						&:before{
 							position: absolute;
