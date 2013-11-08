@@ -902,7 +902,7 @@ public class Table extends AbstractTable implements Refreshable {
 
     public String getSearch() {
 
-        final String search = $(".tablefilters .tablefilter_search input[name=search]", getElement()).val();
+        final String search = $(".tablefilters input[name=search]:not(.empty)", getElement()).val();
 
         if ("null".equalsIgnoreCase(search)) {
             return "";
@@ -916,7 +916,7 @@ public class Table extends AbstractTable implements Refreshable {
         defaultSearch = query;
 
         if (isGenerated()) {
-            setSearch(getElement(), defaultSearch);
+            $(".tablefilters input[name=search]:not(.empty)", getElement()).val(this.defaultSearch);
         }
 
         return this;
