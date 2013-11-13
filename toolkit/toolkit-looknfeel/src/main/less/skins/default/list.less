@@ -63,10 +63,13 @@
 				text-align: @tablesPanel-tableActions-textAlign;
 				margin: @tablesPanel-tableActions-margin;
 				padding: @tablesPanel-tableActions-padding;
+				position: relative;//CSS pie zindex fix
 			}
 		}
 		.table{
 			.thead{
+				position: relative;//CSS pie zindex fix
+				z-index: 1;
 				.borderRadiusLeft(@defaultRadius);
 				background: @tablesPanel-table-thead-bgColor;
 				color: @tablesPanel-table-thead-textColor;
