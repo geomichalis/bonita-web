@@ -33,11 +33,13 @@
 	.borderRadius(@button-radius);
 	.button(@button-height);
 	.verticalGradient(lighten(@btnColor, 8.5%), 0%, @btnColor, 100%);
-	.setEnable();
+	.pointerAsLink();
 	.boxShadow(@button-shadowX, @button-shadowY, @button-shadowBlur, @button-shadowColor);
 	+ .btn, +css3-container +.btn{
 		margin-left: @button-marginBetween;
 	}
+	overflow: hidden;
+	zoom: 1;
 }
 
 .dynamicStroke(@txtColor) when(lightness(@txtColor) < 50%){
