@@ -299,11 +299,10 @@ public class TestFormWorkflowAPIImpl extends FormsTestCase {
         Assert.assertNotNull(updatedDocument1);
         Assert.assertEquals(file.getName(), updatedDocument1.getContentFileName());
 
-        // Apparently if you set a document to null (using an operation) all the versions of the document are lost
-        // final Map<String, Serializable> evaluationResult2 = processAPI.evaluateExpressionsAtProcessInstanciation(processInstanceID, expressions);
-        // Assert.assertTrue(evaluationResult2.containsKey("doc1"));
-        // final org.bonitasoft.engine.bpm.document.Document initialDocument = (org.bonitasoft.engine.bpm.document.Document) evaluationResult2.get("doc1");
-        // Assert.assertNotNull(initialDocument);
+        final Map<String, Serializable> evaluationResult2 = processAPI.evaluateExpressionsAtProcessInstanciation(processInstanceID, expressions);
+        Assert.assertTrue(evaluationResult2.containsKey("doc1"));
+        final org.bonitasoft.engine.bpm.document.Document initialDocument = (org.bonitasoft.engine.bpm.document.Document) evaluationResult2.get("doc1");
+        Assert.assertNotNull(initialDocument);
     }
 
     @Test
