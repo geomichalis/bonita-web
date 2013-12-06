@@ -347,7 +347,7 @@
 					<groupId>ro.isdc.wro4j</groupId>
 					<artifactId>wro4j-maven-plugin</artifactId>
 					<version>${wro4j.version}</version>
-				</plugin>
+				</plugin>           
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -540,5 +540,32 @@
 				</plugins>
 			</build>
 		</profile>
+			<profile>
+		<id>StaticCodeAnalysis</id>
+		<properties>
+			<maven.pmd.cpd.enable>true</maven.pmd.cpd.enable>
+			<aggregate>true</aggregate>
+		</properties>
+		<build>
+			<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.3</version>
+				</plugin>
+			</plugins>
+			</pluginManagement>
+		</build>
+		<reporting>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.0.1</version>
+				</plugin>
+			</plugins>
+		</reporting>
+	</profile>
 	</profiles>
 </project>
