@@ -137,7 +137,7 @@ public class ItemTable extends AbstractTable implements Refreshable, FormNode {
         return this.defaultSelectedId;
     }
 
-    public final ItemDefinition<?> getItemDefinition() {
+    public final ItemDefinition<? extends IItem> getItemDefinition() {
         return this.itemDefinition;
     }
 

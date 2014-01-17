@@ -44,7 +44,7 @@ public class ItemTreeTableFiller extends ItemTableFiller {
 
     @Override
     protected void setData(final String json, final Map<String, String> headers) {
-        final List<IItem> items = (List<IItem>) new JSonItemReader().getItems(json, this.target.getItemDefinition());
+        final List<? extends IItem> items = JSonItemReader.parseItems(json, this.target.getItemDefinition());
 
         // Sort 1 (by parent_id, index)
         Collections.sort(items, new Comparator<IItem>() {

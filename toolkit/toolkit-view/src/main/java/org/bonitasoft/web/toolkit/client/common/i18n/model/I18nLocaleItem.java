@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.web.toolkit.client.common.i18n.model;
 
-import org.bonitasoft.web.toolkit.client.data.item.IItem;
 import org.bonitasoft.web.toolkit.client.data.item.Item;
 import org.bonitasoft.web.toolkit.client.data.item.ItemDefinition;
 
@@ -31,10 +30,6 @@ public class I18nLocaleItem extends Item {
 
     public I18nLocaleItem() {
         super();
-    }
-
-    public I18nLocaleItem(final IItem item) {
-        super(item);
     }
 
     public I18nLocaleItem(final String locale, final String name) {

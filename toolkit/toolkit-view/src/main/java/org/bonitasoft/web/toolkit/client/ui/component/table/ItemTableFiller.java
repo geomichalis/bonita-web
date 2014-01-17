@@ -58,8 +58,7 @@ class ItemTableFiller extends Filler<ItemTable> {
         this.target.setPager(
                 resultPager.getCurrentPage(),
                 resultPager.getNbTotalResults(),
-                resultPager.getNbResultsByPage()
-                );
+                resultPager.getNbResultsByPage());
 
         // FIXME add type to Table
         this.target.setItems((List<IItem>) JSonItemReader.parseItems(json, this.target.getItemDefinition()));

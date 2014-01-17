@@ -81,10 +81,10 @@ public class APIServletCall extends ServletCall {
      * Read the inputStream and parse it as an IItem compatible with the called API.
      */
     private IItem getJSonStreamAsItem() {
-        final IItem item = JSonItemReader.parseItem(getInputStream(), api.getItemDefinition());
-
+        final IItem item = JSonItemReader.parseItem(
+                JSonSimpleDeserializer.unserializeTree(getInputStream()),
+                api.getItemDefinition());
         ValidatorEngine.validate(item, false);
-
         return item;
     }
 

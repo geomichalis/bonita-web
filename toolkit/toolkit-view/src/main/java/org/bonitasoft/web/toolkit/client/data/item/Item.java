@@ -30,6 +30,8 @@ import org.bonitasoft.web.toolkit.client.data.item.attribute.ValidatorEngine;
 import org.bonitasoft.web.toolkit.client.data.item.template.ItemHasDualDescription;
 import org.bonitasoft.web.toolkit.client.data.item.template.ItemHasDualName;
 import org.bonitasoft.web.toolkit.client.data.item.template.ItemHasUniqueId;
+import org.bonitasoft.web.toolkit.client.data.model.Model;
+import org.bonitasoft.web.toolkit.client.data.model.MapModel;
 import org.bonitasoft.web.toolkit.client.ui.utils.DateFormat;
 
 /**
@@ -37,29 +39,18 @@ import org.bonitasoft.web.toolkit.client.ui.utils.DateFormat;
  */
 public abstract class Item implements IItem {
 
+    private Model model = new MapModel(new HashMap<String, String>());
+
     public Item() {
         super();
     }
 
     public Item(final IItem item) {
         super();
-        this.attributes.putAll(item.getAttributes());
+        this.model.copy(item.getAttributes());
     }
-
-    @Override
-    public List<String> getAPIIDOrder() {
-        return getItemDefinition().getPrimaryKeys();
-    }
-
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // DEFAULT FILTERS SUPERVISOR AND TEAM MANAGER
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private final Map<String, String> attributes = new HashMap<String, String>();
 
     private final Map<String, IItem> deploys = new HashMap<String, IItem>();
-
-    // private final Map<String, Long> counters = new HashMap<String, Long>();
 
     @Override
     public final void setId(final APIID id) {
@@ -148,45 +139,10 @@ public abstract class Item implements IItem {
         Item.applyValidatorMandatoryByDefault = applyValidatorMandatoryByDefault;
     }
 
-    /**
-     * @param applyOutputModifiers
-     *            the applyOutputModifiers to set
-     */
     @Override
-    public final void setApplyOutputModifiers(final boolean applyOutputModifiers) {
-        this.applyOutputModifiers = applyOutputModifiers;
+    public void setModel(Model model) {
+        this.model = model;
     }
-
-    /**
-     * @param applyInputModifiers
-     *            the applyInputModifiers to set
-     */
-    @Override
-    public final void setApplyInputModifiers(final boolean applyInputModifiers) {
-        this.applyInputModifiers = applyInputModifiers;
-    }
-
-    /**
-     * @param applyValidators
-     *            the applyValidators to set
-     */
-    @Override
-    public final void setApplyValidators(final boolean applyValidators) {
-        this.applyValidators = applyValidators;
-    }
-
-    /**
-     * @param applyValidatorMandatory
-     *            the applyValidatorMandatory to set
-     */
-    @Override
-    public final void setApplyValidatorMandatory(final boolean applyValidatorMandatory) {
-        this.applyValidatorMandatory = applyValidatorMandatory;
-    }
-
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // SETTERS
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Set an attribute value.
@@ -265,7 +221,7 @@ public abstract class Item implements IItem {
             realValue = ModifierEngine.modify(realValue, attribute.getInputModifiers());
         }
 
-        this.attributes.put(name, realValue);
+        model.setValue(name, realValue);
         if (applyValidators) {
             ValidatorEngine.validate(this, this.applyValidatorMandatory == null ? applyValidatorMandatoryByDefault : this.applyValidatorMandatory);
         }
@@ -335,44 +291,14 @@ public abstract class Item implements IItem {
      */
     @Override
     public final void setDeploy(final String attributeName, final IItem item) {
+        /*
+         * Crappy Work around. Ideally deploys should already be in the map like for overlays.
+         * Once deploys are added in the model during is instantiation this code has to be removed.
+         */
+        if(model instanceof MapModel) {
+            ((MapModel) model).addDeploy(attributeName, item);
+        }
         this.deploys.put(attributeName, item);
-    }
-
-    /**
-     * Remove a deployed version of an attribute
-     * 
-     * @param attributeName
-     *            The name of the attribute deploy to remove
-     */
-    @Override
-    public final void removeDeploy(final String attributeName) {
-        this.deploys.remove(attributeName);
-    }
-
-    /**
-     * Set a counter value.
-     * 
-     * @param counterName
-     *            The name of the counter to set
-     * @param value
-     *            The value of the counter
-     */
-    // public final void setCounterValue(final String counterName, final Long value) {
-    // this.counters.put(counterName, value);
-    // }
-
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Indicate if there are no attribute defined.
-     * 
-     * @return This methods returns TRUE if there are no attributes, otherwise FALSE.
-     */
-    @Override
-    public final boolean isEmpty() {
-        return this.attributes.isEmpty();
     }
 
     /**
@@ -384,7 +310,7 @@ public abstract class Item implements IItem {
      */
     @Override
     public final boolean hasAttribute(final String name) {
-        return this.attributes.containsKey(name);
+        return model.keys().contains(name);
     }
 
     /**
@@ -427,7 +353,7 @@ public abstract class Item implements IItem {
 
             final ItemAttribute attribute = getItemDefinition().getAttribute(attributeName);
 
-            String realValue = this.attributes.get(attributeName);
+            String realValue = model.getValue(attributeName);
 
             if (attribute != null && applyModifiers) {
                 realValue = ModifierEngine.modify(realValue, attribute.getOutputModifiers());
@@ -529,22 +455,8 @@ public abstract class Item implements IItem {
         return DateFormat.sqlToDate(getAttributeValue(itemAttribute));
     }
 
-    // AS Long
-
-    public final Long getAttributeValueAsLong(final String attributeName, final boolean applyModifiers) {
-        return Long.valueOf(getAttributeValue(attributeName, applyModifiers));
-    }
-
     public final Long getAttributeValueAsLong(final String attributeName) {
         return Long.valueOf(getAttributeValue(attributeName));
-    }
-
-    public final Long getAttributeValueAsLong(final ItemAttribute itemAttribute, final boolean applyModifiers) {
-        return Long.valueOf(getAttributeValue(itemAttribute, applyModifiers));
-    }
-
-    public final Long getAttributeValueAsLong(final ItemAttribute itemAttribute) {
-        return Long.valueOf(getAttributeValue(itemAttribute));
     }
 
     // Get all
@@ -558,7 +470,7 @@ public abstract class Item implements IItem {
     public final Map<String, String> getAttributes(final boolean applyModifiers) {
         final Map<String, String> results = new HashMap<String, String>();
 
-        for (final String attributeName : this.attributes.keySet()) {
+        for (final String attributeName : this.model.keys()) {
             results.put(attributeName, this.getAttributeValue(attributeName, applyModifiers));
         }
 
@@ -574,27 +486,12 @@ public abstract class Item implements IItem {
      */
     @Override
     public final IItem getDeploy(final String attributeName) {
-        // TODO If not deployed, automatically call the API to deploy.
-
-        return this.deploys.get(attributeName);
+        return model.getDeploy(attributeName);
     }
     
     public Map<String, IItem> getDeploys() {
         return deploys;
     }
-
-    /**
-     * Get a counter value.
-     * 
-     * @param counterName
-     *            The name of the counter to deploy
-     * @return This method returns the counter value if it's available, otherwise NULL.
-     */
-    // public final Long getCounterValue(final String counterName) {
-    // // TODO If not counted, automatically call the API to count.
-    //
-    // return this.counters.get(counterName);
-    // }
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ATTRIBUTES
@@ -602,11 +499,10 @@ public abstract class Item implements IItem {
 
     @Override
     public final ArrayList<String> getAttributeNames() {
-        return new ArrayList<String>(this.attributes.keySet());
+        return new ArrayList<String>(this.model.keys());
     }
 
-    @Override
-    public final void setAttributes(final Map<String, String> attributes, final boolean applyModifiers, final boolean applyValidators) {
+    private final void setAttributes(final Map<String, String> attributes, final boolean applyModifiers, final boolean applyValidators) {
         if (attributes == null || attributes.size() == 0) {
             return;
         }
@@ -645,8 +541,8 @@ public abstract class Item implements IItem {
     @Override
     public final String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (final String key : this.attributes.keySet()) {
-            final String rawValue = this.attributes.get(key);
+        for (final String key : this.model.keys()) {
+            final String rawValue = this.model.getValue(key);
             final String cleanValue = this.getAttributeValue(key);
 
             sb.append(key).append(" : ").append(rawValue);

@@ -14,19 +14,22 @@
  */
 package org.bonitasoft.web.toolkit.client.common.json;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.gwt.core.client.JsArray;
 import org.bonitasoft.web.toolkit.client.common.AbstractTreeNode;
 import org.bonitasoft.web.toolkit.client.common.Tree;
 import org.bonitasoft.web.toolkit.client.common.TreeIndexed;
 import org.bonitasoft.web.toolkit.client.common.TreeLeaf;
 import org.bonitasoft.web.toolkit.client.data.item.IItem;
 import org.bonitasoft.web.toolkit.client.data.item.ItemDefinition;
+import org.bonitasoft.web.toolkit.client.data.model.OverlayFactory;
+import org.bonitasoft.web.toolkit.client.data.model.OverlayImpl;
+import org.bonitasoft.web.toolkit.client.data.model.OverlayModel;
 
 /**
  * This class is just a set of functions used to read the JSon returned by the GWT server side
@@ -51,23 +54,6 @@ public class JSonItemReader {
         UNSERIALIZER = unserializer;
     }
 
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // PARSING
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Parse the JSon of a single Item.
-     * 
-     * @param json
-     *            The json as a string
-     * @param itemDefinition
-     *            The definition of the IItem to retrieve.
-     * @return This function returns an IItem corresponding to the definition.
-     */
-    public <E extends IItem> E getItem(final String json, final ItemDefinition<E> itemDefinition) {
-        return parseItem(json, itemDefinition);
-    }
-
     /**
      * Parse the JSon of a list of Items.
      * 
@@ -77,55 +63,13 @@ public class JSonItemReader {
      *            The definition of the Items to retrieve.
      * @return This function returns a list of Items corresponding to the definition.
      */
-    public <E extends IItem> List<E> getItems(final String json, final ItemDefinition<E> itemDefinition) {
-        return parseItems(json, itemDefinition);
-    }
-
-    /**
-     * Parse the JSon of a list of Items.
-     * 
-     * @param json
-     *            The json as a string
-     * @param itemDefinition
-     *            The definition of the Items to retrieve.
-     * @return This function returns a list of Items corresponding to the definition.
-     */
-    public static <E extends IItem> List<E> parseItems(final String json, final ItemDefinition<E> itemDefinition) {
-        return parseItems(json, itemDefinition, APPLY_VALIDATORS);
-    }
-
-    /**
-     * Parse the JSon of a list of Items.
-     * 
-     * @param json
-     *            The json as a string
-     * @param itemDefinition
-     *            The definition of the Items to retrieve.
-     * @return This function returns a list of Items corresponding to the definition.
-     */
-    public static <E extends IItem> List<E> parseItems(final String json, final ItemDefinition<E> itemDefinition, final boolean applyValidators) {
-        AbstractTreeNode<String> tree = UNSERIALIZER._unserializeTree(json);
-
-        if (tree instanceof TreeIndexed<?> && ((TreeIndexed<String>) tree).get("results") != null) {
-            tree = ((TreeIndexed<String>) tree).get("results");
+    public static <E extends IItem> List<E> parseItems(final String json, final ItemDefinition<E> definition) {
+        final List<E> items = new LinkedList<E>();
+        JsArray<OverlayImpl> overlays = OverlayFactory.createArray(json);
+        for(int i = 0; i < overlays.length(); i++) {
+            items.add(definition.createItem(new OverlayModel(overlays.get(i), definition)));
         }
-
-        if (!(tree instanceof Tree<?>)) {
-            return new ArrayList<E>();
-        }
-
-        return parseItems((Tree<String>) tree, itemDefinition, applyValidators);
-    }
-
-    private static <E extends IItem> List<E> parseItems(final Tree<String> tree, final ItemDefinition<E> itemDefinition, final boolean applyValidators) {
-        final List<E> itemList = new LinkedList<E>();
-        for (final AbstractTreeNode<String> node : tree.getNodes()) {
-            if (!(node instanceof TreeIndexed<?>)) {
-                throw new IllegalArgumentException("JSon format error");
-            }
-            itemList.add(parseItem((TreeIndexed<String>) node, itemDefinition, applyValidators));
-        }
-        return itemList;
+        return items;
     }
 
     /**
@@ -162,21 +106,13 @@ public class JSonItemReader {
      * Parse an item based on a JSon String
      * 
      * @param json
-     * @param itemDefinition
+     * @param definition
      */
-    public static <E extends IItem> E parseItem(final String json, final ItemDefinition<E> itemDefinition) {
-        return parseItem(json, itemDefinition, APPLY_VALIDATORS);
+    public static <E extends IItem> E parseItem(final String json, final ItemDefinition<E> definition) {
+        return definition.createItem(new OverlayModel(OverlayFactory.create(json), definition));
     }
 
-    /**
-     * Parse an item based on a JSon String
-     * 
-     * @param json
-     * @param itemDefinition
-     */
-    public static <E extends IItem> E parseItem(final String json, final ItemDefinition<E> itemDefinition, final boolean applyValidators) {
-        AbstractTreeNode<String> tree = UNSERIALIZER._unserializeTree(json);
-
+    public static <E extends IItem> E parseItem(AbstractTreeNode<String> tree, final ItemDefinition<E> itemDefinition) {
         if (tree instanceof Tree<?>) {
             tree = ((Tree<String>) tree).get(0);
 
@@ -195,19 +131,7 @@ public class JSonItemReader {
      * @param itemDefinition
      */
     private static <E extends IItem> E parseItem(final TreeIndexed<String> tree, final ItemDefinition<E> itemDefinition) {
-        return parseItem(tree, itemDefinition, APPLY_VALIDATORS);
-    }
-
-    /**
-     * Parse an item based on a TreeIndexed
-     * 
-     * @param tree
-     * @param itemDefinition
-     */
-    private static <E extends IItem> E parseItem(final TreeIndexed<String> tree, final ItemDefinition<E> itemDefinition, final boolean applyValidators) {
         final E item = itemDefinition.createItem();
-
-        item.setApplyValidators(applyValidators);
 
         for (final Entry<String, AbstractTreeNode<String>> entry : tree.getNodes().entrySet()) {
             // primitive type
@@ -219,10 +143,7 @@ public class JSonItemReader {
                         entry.getKey(),
                         parseItem(
                                 (TreeIndexed<String>) entry.getValue(),
-                                itemDefinition.getDeployDefinition(entry.getKey())
-                        )
-                
-                      );
+                                itemDefinition.getDeployDefinition(entry.getKey())));
             // json list - set directly json in attribute value
             } else if (entry.getValue() instanceof Tree<?>) {
                 item.setAttribute(entry.getKey(), entry.getValue().toJson());

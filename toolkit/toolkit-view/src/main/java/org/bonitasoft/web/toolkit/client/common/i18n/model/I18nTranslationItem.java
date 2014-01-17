@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.web.toolkit.client.common.i18n.model;
 
-import org.bonitasoft.web.toolkit.client.data.item.IItem;
 import org.bonitasoft.web.toolkit.client.data.item.Item;
 import org.bonitasoft.web.toolkit.client.data.item.ItemDefinition;
 
@@ -28,10 +27,6 @@ public class I18nTranslationItem extends Item {
 
     public I18nTranslationItem() {
         super();
-    }
-
-    public I18nTranslationItem(final IItem item) {
-        super(item);
     }
 
     public static final String ATTRIBUTE_KEY = "key";

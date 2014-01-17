@@ -18,12 +18,12 @@ package org.bonitasoft.web.toolkit.client.data.item;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.web.toolkit.client.common.json.JsonSerializable;
 import org.bonitasoft.web.toolkit.client.data.APIID;
 import org.bonitasoft.web.toolkit.client.data.item.attribute.ItemAttribute;
+import org.bonitasoft.web.toolkit.client.data.model.Model;
 
 /**
  * @author Séverin Moussel
@@ -31,35 +31,9 @@ import org.bonitasoft.web.toolkit.client.data.item.attribute.ItemAttribute;
  */
 public interface IItem extends JsonSerializable {
 
-    public abstract List<String> getAPIIDOrder();
-
     public abstract void setId(final APIID id);
 
     public abstract APIID getId();
-
-    /**
-     * @param applyOutputModifiers
-     *            the applyOutputModifiers to set
-     */
-    public abstract void setApplyOutputModifiers(final boolean applyOutputModifiers);
-
-    /**
-     * @param applyInputModifiers
-     *            the applyInputModifiers to set
-     */
-    public abstract void setApplyInputModifiers(final boolean applyInputModifiers);
-
-    /**
-     * @param applyValidators
-     *            the applyValidators to set
-     */
-    public abstract void setApplyValidators(final boolean applyValidators);
-
-    /**
-     * @param applyValidatorMandatory
-     *            the applyValidatorMandatory to set
-     */
-    public abstract void setApplyValidatorMandatory(final boolean applyValidatorMandatory);
 
     /**
      * Set an attribute value.
@@ -159,21 +133,6 @@ public interface IItem extends JsonSerializable {
     public abstract void setDeploy(final String attributeName, final IItem item);
 
     /**
-     * Remove a deployed version of an attribute
-     * 
-     * @param attributeName
-     *            The name of the attribute deploy to remove
-     */
-    public abstract void removeDeploy(final String attributeName);
-
-    /**
-     * Indicate if there are no attribute defined.
-     * 
-     * @return This methods returns TRUE if there are no attributes, otherwise FALSE.
-     */
-    public abstract boolean isEmpty();
-
-    /**
      * Indicate if the attribute exists even if its value is NULL or empty.
      * 
      * @param name
@@ -253,9 +212,9 @@ public interface IItem extends JsonSerializable {
 
     public abstract ArrayList<String> getAttributeNames();
 
-    public abstract void setAttributes(final Map<String, String> attributes, final boolean applyModifiers, final boolean applyValidators);
-
     public abstract void setAttributes(final Map<String, String> attributes);
+
+    public abstract void setModel(final Model model);
 
     /**
      * Get the definition of an Item

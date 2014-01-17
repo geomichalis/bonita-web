@@ -99,7 +99,7 @@ public class ChangeLangPage extends Page {
     
         @Override
         protected void setData(final String json, final Map<String, String> headers) {
-            List<I18nLocaleItem> items = new JSonItemReader().getItems(json, new I18nLocaleDefinition());
+            List<I18nLocaleItem> items = JSonItemReader.parseItems(json, new I18nLocaleDefinition());
             List<Option> options = buildSelectOptions(items);
             ((Select) this.target.getEntry(new JsId("lang"))).refreshOptions(options);
         }

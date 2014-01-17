@@ -27,6 +27,8 @@ import org.bonitasoft.web.toolkit.client.data.item.attribute.ItemAttribute;
 import org.bonitasoft.web.toolkit.client.data.item.attribute.ValidationException;
 import org.bonitasoft.web.toolkit.client.data.item.attribute.modifier.Modifier;
 import org.bonitasoft.web.toolkit.client.data.item.attribute.validator.Validator;
+import org.bonitasoft.web.toolkit.client.data.model.Model;
+import org.bonitasoft.web.toolkit.client.data.model.MapModel;
 
 /**
  * This class is the super class of all Items definitions.
@@ -208,6 +210,10 @@ public abstract class ItemDefinition<E extends IItem> {
         this.deploys.put(attributeName, definition);
     }
 
+    public Map<String, ItemDefinition<?>> getDeployDefinitions() {
+        return deploys;
+    }
+
     public final ItemDefinition<?> getDeployDefinition(final String attributeName) {
         return this.deploys.containsKey(attributeName)
                 ? this.deploys.get(attributeName)
@@ -271,13 +277,19 @@ public abstract class ItemDefinition<E extends IItem> {
         }
     }
 
-    public final E createItem(final Map<String, String> attributes) throws ValidationException {
+    public final E createItem(Map<String, String> attributes) throws ValidationException {
+        if(attributes == null) {
+            attributes = new HashMap<String, String>();
+        }
+        return createItem(new MapModel(attributes));
+    }
+
+    public final E createItem(Model model) throws ValidationException {
         final E item = _createItem();
 
-        if (attributes != null) {
-            item.setAttributes(attributes);
+        if (model != null) {
+            item.setModel(model);
         }
-
         return item;
     }
     

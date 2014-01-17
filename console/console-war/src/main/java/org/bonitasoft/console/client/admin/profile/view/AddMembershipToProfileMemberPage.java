@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.console.client.admin.organization.users.action.AddMembershipAction;
-import org.bonitasoft.console.client.admin.organization.users.view.UserListingAdminPage;
 import org.bonitasoft.web.rest.model.identity.GroupDefinition;
 import org.bonitasoft.web.rest.model.identity.GroupItem;
 import org.bonitasoft.web.rest.model.identity.MembershipItem;
@@ -59,7 +58,7 @@ public class AddMembershipToProfileMemberPage extends Page {
 
             @Override
             public void onSuccess(final int httpStatusCode, final String response, final Map<String, String> headers) {
-                final ProfileItem item = (ProfileItem) new JSonItemReader().getItem(response, Definitions.get(ProfileDefinition.TOKEN));
+                final ProfileItem item = JSonItemReader.parseItem(response, ProfileDefinition.get());
                 final String profileName = item.getAttributeValue(ProfileItem.ATTRIBUTE_NAME);
                 setTitle(_("Add a membership to profile %%"), new Strong(_(profileName)));
             }
