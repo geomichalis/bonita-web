@@ -47,11 +47,10 @@ class TableFilterText extends TableFilter {
         rootElement.addClassName("tablefiltertext");
 
         // Input
-        $(rootElement).append(HTML.inputText(this.name, this.value, new XMLAttributes("id", XML.getLastUniqueId())));
+        $(rootElement).append(HTML.inputText(name, value, new XMLAttributes("id", XML.getLastUniqueId())));
 
         $(":text", rootElement).keydown(new Function() {
 
-            @Override
             public boolean f(final Event e, final Object data) {
                 // Return
                 if (e.getKeyCode() == 13) {

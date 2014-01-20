@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.web.toolkit.client;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 import java.util.Map;
 
 import org.bonitasoft.web.toolkit.client.common.Tree;

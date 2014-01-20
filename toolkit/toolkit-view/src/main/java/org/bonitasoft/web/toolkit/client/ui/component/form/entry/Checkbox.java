@@ -48,13 +48,13 @@ public class Checkbox extends Input {
         this.checked = checked;
 
         if (isGenerated()) {
-            this.setChecked(this.inputElement, checked);
+            this.setChecked(inputElement, checked);
         }
     }
 
     private native void setChecked(Element input, boolean checked)
     /*-{
-         $wnd.$(input).check(checked);
+         $wnd.$(input).attr("checked","checked");
     }-*/;
 
     @Override
@@ -66,10 +66,10 @@ public class Checkbox extends Input {
     protected void postProcessHtml() {
         super.postProcessHtml();
 
-        $(this.inputElement).after($(this.labelElement).children().get(0));
+        $(inputElement).after($(labelElement).children().get(0));
 
-        if (this.checked) {
-            this.setChecked(this.inputElement, true);
+        if (checked) {
+            this.setChecked(inputElement, true);
         }
     }
 

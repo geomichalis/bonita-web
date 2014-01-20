@@ -49,9 +49,9 @@ public class APII18nTranslation extends API<I18nTranslationItem> {
         final Map<String, String> translations = I18n.getInstance().getLocale(AbstractI18n.stringToLocale(filters.get("locale")));
         final LinkedList<I18nTranslationItem> items = new LinkedList<I18nTranslationItem>();
 
-        for (final String key : translations.keySet()) {
-            items.add(new I18nTranslationItem(key, translations.get(key)));
-        }
+        // for (final String key : translations.keySet()) {
+        // items.add(new I18nTranslationItem(key, translations.get(key)));
+        // }
 
         return new ItemSearchResult<I18nTranslationItem>(page * resultsByPage, resultsByPage, new Long(items.size()).longValue(), items);
 

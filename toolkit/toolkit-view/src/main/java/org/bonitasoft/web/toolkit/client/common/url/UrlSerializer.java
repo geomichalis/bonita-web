@@ -68,16 +68,15 @@ public class UrlSerializer extends UrlUtil {
     }
 
     public static String serializeMap(final String key, final Map<? extends Object, ? extends Object> map) {
-        final StringBuilder res = new StringBuilder();
+        String res = new String();
 
         for (final Entry<? extends Object, ? extends Object> entry : map.entrySet()) {
             final String realKey = key != null && key.length() > 0
                     ? key + "[" + escape(entry.getKey().toString()) + "]"
                     : escape(entry.getKey().toString());
 
-            res.append("&").append(serialize(realKey, entry.getValue()));
+            res += ("&") + serialize(realKey, entry.getValue());
         }
-
         return res.length() > 0 ? res.toString().substring(1) : "";
     }
 }

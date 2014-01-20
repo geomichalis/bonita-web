@@ -85,6 +85,16 @@
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+		
+
+
 	</dependencies>
 	<build>
 		<resources>
@@ -397,7 +407,7 @@
 											<destFileName>bonita-portal-theme-css.zip</destFileName>
 										</artifactItem>
 									</artifactItems>
-									 <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
+									<outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
 								</configuration>
 							</execution>
 						</executions>

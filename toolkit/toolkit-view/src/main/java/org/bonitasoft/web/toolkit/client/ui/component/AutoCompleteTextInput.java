@@ -285,7 +285,6 @@ public class AutoCompleteTextInput extends Components implements Refreshable {
         // ON TEXT CHANGE
         input.keypress(new Function() {
 
-            @Override
             public boolean f(final Event e, final Object data) {
 
                 // Window.alert(e.getKeyCode() + " - " + e.getCharCode());

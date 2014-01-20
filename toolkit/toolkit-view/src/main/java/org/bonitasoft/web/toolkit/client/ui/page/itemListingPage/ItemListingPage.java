@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.web.toolkit.client.ClientApplicationURL;
-import org.bonitasoft.web.toolkit.client.ViewController;
-import org.bonitasoft.web.toolkit.client.common.TreeIndexed;
 import org.bonitasoft.web.toolkit.client.common.url.UrlOption;
 import org.bonitasoft.web.toolkit.client.data.APIID;
 import org.bonitasoft.web.toolkit.client.data.item.IItem;
@@ -79,12 +77,11 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
      */
     protected boolean showSearchBar = true;
 
-    
     /**
      * The search form for all tables.
      */
     protected final Form tablesSearch = new Form(new JsId("search"));
-    
+
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +91,7 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
      */
     public ItemListingPage() {
         super();
+        firstfilterLink = null;
         addClass("itemlistingpage");
         setAllowAutomatedUpdate(false);
     }
@@ -181,6 +179,8 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
      */
     private final Map<String, Link> filtersLinks = new LinkedHashMap<String, Link>();
 
+    private Link firstfilterLink = null;
+
     /**
      * Initialize the filter panel (left panel).
      */
@@ -201,7 +201,7 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
     }
 
     void selectFirstFilter() {
-        $(ItemListingPage.this.filtersLinks.values().iterator().next().getElement()).click();
+        // $(firstfilterLink.getElement()).click();
     }
 
     /**
@@ -342,6 +342,9 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
                     filter.getTooltip(),
                     action
                     );
+            if (filtersLinks.isEmpty()) {
+                firstfilterLink = link;
+            }
             action.setLink(link);
             filter.setLink(link);
 
@@ -617,8 +620,6 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
      */
     private final MenuFolder menuSorts = new MenuFolder(_("Sort by"));
 
-    
-
     /**
      * Initialize the table search form.
      */
@@ -664,13 +665,13 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
                     .setShowSearch(true)
                     .setView(VIEW_TYPE.VIEW_DETAILS);
 
-            sortTable(table, defineDefaultSort());
+            // sortTable(table, defineDefaultSort());
 
             this.tablesPanel.addHeader(getTitle());
             this.tablesPanel.addBody(itemListingTable);
 
             // Add quickDetailsAction
-            table.setDefaultAction(new UpdateQuickDetailsAction<T>(this, itemListingTable));
+            // table.setDefaultAction(new UpdateQuickDetailsAction<T>(this, itemListingTable));
         }
 
         // add the table Search
@@ -703,12 +704,12 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
     protected abstract LinkedList<ItemListingTable> defineTables();
 
     public void updateQuickDetailPanel(ItemQuickDetailsPage<?> itemQuickDetailsPage, String itemId) {
-        final TreeIndexed<String> params = itemQuickDetailsPage.getParameters();
-        params.addValue("id", itemId);
+        // final TreeIndexed<String> params = itemQuickDetailsPage.getParameters();
+        // params.addValue("id", itemId);
 
-        ClientApplicationURL.addAttribute("_id", itemId);
-        ClientApplicationURL.refreshUrl(false);
-        ViewController.showView(itemQuickDetailsPage.getToken(), detailsPanel.getElement(), params);
+        // ClientApplicationURL.addAttribute("_id", itemId);
+        // ClientApplicationURL.refreshUrl(false);
+        // ViewController.s+howView(itemQuickDetailsPage.getToken(), detailsPanel.getElement(), params);
     }
 
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -748,7 +749,7 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
         // $(getCurrentFilter().getLink().getElement()).click();
 
     }
-    
+
     void selectRightResourceFilter() {
         if (hasResourceFilterParameter()) {
             selectFilter(getParameter(UrlOption.RESOURCE_FILTER));
@@ -756,6 +757,5 @@ public abstract class ItemListingPage<T extends IItem> extends Page {
             selectFirstFilter();
         }
     }
-
 
 }

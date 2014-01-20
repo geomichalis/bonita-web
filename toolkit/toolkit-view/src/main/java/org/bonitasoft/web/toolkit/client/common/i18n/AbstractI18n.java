@@ -16,12 +16,12 @@
  */
 package org.bonitasoft.web.toolkit.client.common.i18n;
 
-import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
-import org.bonitasoft.web.toolkit.client.common.texttemplate.TextTemplate;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.bonitasoft.web.toolkit.client.common.texttemplate.Arg;
+import org.bonitasoft.web.toolkit.client.common.texttemplate.TextTemplate;
 
 /**
  * @author Séverin Moussel
@@ -958,17 +958,17 @@ public abstract class AbstractI18n {
 
     public Map<String, String> getLocale(final LOCALE locale) {
         if (locale != null) {
-            if (!this.locales.containsKey(locale)) {
+            if (!locales.containsKey(locale)) {
                 loadLocale(locale);
             }
-            return this.locales.get(locale);
+            return locales.get(locale);
         } else {
             return getLocale(getDefaultLocale());
         }
     }
 
     protected final void setLocale(final LOCALE locale, final Map<String, String> map) {
-        this.locales.put(locale, map);
+        locales.put(locale, map);
     }
 
     public final static void load(final LOCALE locale) {
@@ -982,11 +982,11 @@ public abstract class AbstractI18n {
     }
 
     public final LOCALE _getDefaultLocale() {
-        return this.defaultLocale;
+        return defaultLocale;
     }
 
     private void _setDefaultLocale(final LOCALE locale) {
-        this.defaultLocale = locale;
+        defaultLocale = locale;
     }
 
     public final static void setDefaultLocale(final LOCALE locale) {
@@ -1005,22 +1005,23 @@ public abstract class AbstractI18n {
     }
 
     protected String getText(final String string) {
-        return this.getText(this.defaultLocale, string);
+        return this.getText(defaultLocale, string);
     }
 
     protected String getText(final LOCALE locale, final String string) {
-        final Map<String, String> localeMap = getLocale(locale);
-
-        if (localeMap == null) {
-            return string;
-        }
-
-        final String translation = localeMap.get(string);
-        if (translation == null) {
-            return string;
-        }
-
-        return translation;
+        return locale.toString() + "!" + string;
+        // final Map<String, String> localeMap = getLocale(locale);
+        //
+        // if (localeMap == null) {
+        // return string;
+        // }
+        //
+        // final String translation = localeMap.get(string);
+        // if (translation == null) {
+        // return string;
+        // }
+        //
+        // return translation;
     }
 
     protected String getText(final String string, final Arg... args) {

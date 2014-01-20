@@ -38,7 +38,7 @@ public class JSonUtil {
         String hhhh;
         int i;
         final int len = string.length();
-        final StringBuffer sb = new StringBuffer(len + 4);
+        String sb = new String();
 
         for (i = 0; i < len; i += 1) {
             b = c;
@@ -46,42 +46,42 @@ public class JSonUtil {
             switch (c) {
                 case '\\':
                 case '"':
-                    sb.append('\\');
-                    sb.append(c);
+                    sb += '\\';
+                    sb += c;
                     break;
                 case '/':
                     if (b == '<') {
-                        sb.append('\\');
+                        sb += '\\';
                     }
-                    sb.append(c);
+                    sb += c;
                     break;
                 case '\b':
-                    sb.append("\\b");
+                    sb += "\\b";
                     break;
                 case '\t':
-                    sb.append("\\t");
+                    sb += "\\t";
                     break;
                 case '\n':
-                    sb.append("\\n");
+                    sb += "\\n";
                     break;
                 case '\f':
-                    sb.append("\\f");
+                    sb += "\\f";
                     break;
                 case '\r':
-                    sb.append("\\r");
+                    sb += "\\r";
                     break;
                 default:
                     if (c < ' ' || c >= '\u0080' && c < '\u00a0' ||
                             c >= '\u2000' && c < '\u2100') {
                         hhhh = "000" + Integer.toHexString(c);
-                        sb.append("\\u" + hhhh.substring(hhhh.length() - 4));
+                        sb += "\\u" + hhhh.substring(hhhh.length() - 4);
                     } else {
-                        sb.append(c);
+                        sb += c;
                     }
             }
         }
 
-        return sb.toString();
+        return sb;
     }
 
     private static Character next(final String string, int currentPos) {
@@ -115,7 +115,7 @@ public class JSonUtil {
 
     public static String unescape(final String string) {
         final int len = string.length();
-        final StringBuffer sb = new StringBuffer(len);
+        String sb = new String();
         int i = -1;
         while (i < len - 1) {
             Character c = next(string, i);
@@ -135,19 +135,19 @@ public class JSonUtil {
                     i++;
                     switch (c) {
                         case 'b':
-                            sb.append('\b');
+                            sb += '\b';
                             break;
                         case 't':
-                            sb.append('\t');
+                            sb += '\t';
                             break;
                         case 'n':
-                            sb.append('\n');
+                            sb += '\n';
                             break;
                         case 'f':
-                            sb.append('\f');
+                            sb += '\f';
                             break;
                         case 'r':
-                            sb.append('\r');
+                            sb += '\r';
                             break;
                         case 'u':
                             final String cc = next(string, i, 4);
@@ -156,13 +156,13 @@ public class JSonUtil {
                                 return null;
                             }
                             i += 4;
-                            sb.append(Integer.parseInt(cc, 16));
+                            sb += Integer.parseInt(cc, 16);
                             break;
                         case '"':
                         case '\'':
                         case '\\':
                         case '/':
-                            sb.append(c);
+                            sb += c;
                             break;
                         default:
                             // TODO log "Illegal escape character.";
@@ -170,10 +170,10 @@ public class JSonUtil {
                     }
                     break;
                 default:
-                    sb.append(c);
+                    sb += c;
             }
         }
-        return sb.toString();
+        return sb;
     }
 
     public static HashMap<String, String> unescape(final HashMap<String, String> values) {

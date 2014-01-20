@@ -48,12 +48,11 @@ public class TableFilterText extends TableFilter {
 
         // Input
         final XMLAttributes attributes = new XMLAttributes("id", XML.getLastUniqueId());
-        attributes.add("placeholder", this.tooltip);
-        $(rootElement).append(HTML.inputText(this.name, this.value, attributes));
+        attributes.add("placeholder", tooltip);
+        $(rootElement).append(HTML.inputText(name, value, attributes));
 
         $(":text", rootElement).keydown(new Function() {
 
-            @Override
             public boolean f(final Event e, final Object data) {
                 // Return
                 if (e.getKeyCode() == 13) {

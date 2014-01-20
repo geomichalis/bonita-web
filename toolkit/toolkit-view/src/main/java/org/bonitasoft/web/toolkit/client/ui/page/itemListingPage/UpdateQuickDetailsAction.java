@@ -13,12 +13,13 @@ import org.bonitasoft.web.toolkit.client.ui.action.Action;
 final class UpdateQuickDetailsAction<T extends IItem> extends Action {
 
     private final ItemListingTable table;
-	private ItemListingPage<T> itemListingPage;
+
+    private final ItemListingPage<T> itemListingPage;
 
     public UpdateQuickDetailsAction(ItemListingPage<T> itemListingPage, ItemListingTable table) {
         super();
         this.table = table;
-		this.itemListingPage = itemListingPage;
+        this.itemListingPage = itemListingPage;
     }
 
     @Override

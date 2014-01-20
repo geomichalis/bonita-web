@@ -27,20 +27,19 @@ import java.util.Map.Entry;
  */
 public class UrlBuilder {
 
-    private final StringBuffer url;
+    private String url;
 
     private static final String PARAM_TAG = "?";
 
     private static final String HASH_TAG = "#";
 
-    private final StringBuffer hashParameters = new StringBuffer();
+    private String hashParameters = new String();
 
     public UrlBuilder(final String url) {
         final String[] split = url.split(HASH_TAG);
-        this.url = new StringBuffer(split[0]);
+        this.url = new String(split[0]);
         if (url.contains(HASH_TAG)) {
-            hashParameters.append(HASH_TAG);
-            hashParameters.append(split[1]);
+            hashParameters += HASH_TAG + split[1];
         }
     }
 
@@ -60,25 +59,25 @@ public class UrlBuilder {
         }
     }
 
-    private boolean alreadyContains(final StringBuffer buffer, final String key) {
+    private boolean alreadyContains(final String buffer, final String key) {
         return buffer.indexOf(key) > 0;
 
     }
 
-    private void appendParameter(final StringBuffer buffer, final String key, final String value) {
-        buffer.append(key).append("=").append(value);
+    private void appendParameter(String buffer, final String key, final String value) {
+        buffer += key + "=" + value;
     }
 
     public String build() {
-        url.append(hashParameters.toString());
-        return url.toString();
+        url += hashParameters.toString();
+        return url;
     }
 
-    private void appendSeparator(final StringBuffer buffer, final String initialSeparator) {
+    private void appendSeparator(String buffer, final String initialSeparator) {
         if (buffer.indexOf(initialSeparator) != -1) {
-            buffer.append("&");
+            buffer += "&";
         } else {
-            buffer.append(initialSeparator);
+            buffer += initialSeparator;
         }
     }
 }
