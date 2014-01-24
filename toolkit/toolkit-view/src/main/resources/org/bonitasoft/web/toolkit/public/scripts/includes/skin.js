@@ -180,8 +180,6 @@ $(function() {
 	$.uiManager.addMaker(function(c) {
 		$(".tabSection", c).bonitaSectionsInTabs();
 	});
-	
-	
 });
 
 
