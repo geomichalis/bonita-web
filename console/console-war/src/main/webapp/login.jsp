@@ -83,7 +83,7 @@
 <link rel="stylesheet" type="text/css" href="<%= styleUrl %>&location=bonita.css"/>
 
 
-<script type="text/javascript" src="portal/scripts/jquery/jquery-1.6.4.js"></script>
+<script type="text/javascript" src="portal/scripts/jquery/jquery-1.10.2.min.js"></script>
 <script>
 	/* Add url hash to form action url */
 	$(document).ready(function() {
