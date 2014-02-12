@@ -18,3 +18,9 @@ Run the following command
 
 Then launch a remote debugger on port 8000.  
 You can modify sources and put breakpoints to debug your code
+
+## Launch super dev mode ##
+
+mvn -Pdev gwt:run-codeserver (launch the compiler)
+then
+mvn -Pdev gwt:run [-Dbonita.home=/path/to/bonita/home]
